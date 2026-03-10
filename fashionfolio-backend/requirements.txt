@@ -10,3 +10,4 @@ python-multipart
 httpx
 google-generativeai
 pydantic[email]
+bcrypt==4.0.1
