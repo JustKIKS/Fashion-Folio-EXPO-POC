@@ -1,0 +1,37 @@
+# Environnement virtuel
+venv/
+.venv/
+
+# Variables d'environnement
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# Base de données
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Alembic
+alembic/versions/*.pyc

@@ -1,24 +1,25 @@
 from pydantic import BaseModel, EmailStr
 
 
-class UserCreate(BaseModel):   # ce qu on recois a l inscription de l user
+class UserCreate(BaseModel):
     email: EmailStr
     password: str
     username: str
 
 
-class UserLogin(BaseModel):    # ce qu'on reçoit a la connexion
+class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
 
-class UserRead(BaseModel):     # ce qu'on return
+class UserOut(BaseModel):
     id: int
-    email: str
+    email: EmailStr
     username: str
-    avatar: str | None
+
+    model_config = {"from_attributes": True}
 
 
-class Token(BaseModel):        # le JWT retourné aprs le login
+class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
