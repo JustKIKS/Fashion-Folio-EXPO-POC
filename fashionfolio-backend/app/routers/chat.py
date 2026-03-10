@@ -9,7 +9,7 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 @router.post("/")
 def chat(message: str, db: Session = Depends(get_db)):
 
-    # Pour l'instant, dressing hardcodé pour tester
+    # Pour l'instant, dressing hardcodé pour test
     wardrobe = [
         {"id": 1, "type": "top",    "name": "T-shirt blanc",
             "color": "blanc",  "style": "casual", "brand": "Zara"},
