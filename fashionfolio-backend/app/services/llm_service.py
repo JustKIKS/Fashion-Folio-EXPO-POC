@@ -3,8 +3,8 @@ import json
 from app.config import settings
 
 # Configure le client Gemini
-genai.configure(api_key=settings.gemini_api_key)
-model = genai.GenerativeModel(settings.gemini_model)
+genai.configure(api_key=settings.GEMINI_API_KEY)
+model = genai.GenerativeModel(settings.GEMINI_MODEL)
 
 
 def build_system_prompt(wardrobe: list, outfit_history: list) -> str:
