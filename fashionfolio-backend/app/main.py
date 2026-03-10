@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.database import init_db
+from app.routers import auth, wardrobe, chat
 
 
 # Création de l'application FastAPI
@@ -17,6 +18,10 @@ def startup():
     # On initialise la base de données
     # Si les tables n'existent pas encore, elles sont créées à partir du schema.sql
     init_db()
+
+app.include_router(auth.router)
+app.include_router(wardrobe.router)
+app.include_router(chat.router)
 
 # Route de base — permet de vérifier rapidement que l'API tourne
 # Accessible sur http://localhost:8000/
