@@ -11,7 +11,11 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     JWT_EXPIRE_MINUTES: int = 30
 
-    # LLM (provider non encore défini)
+    # Gemini
+    GEMINI_API_KEY: str
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
+    # LLM (optionnel, générique)
     LLM_PROVIDER: str | None = None
     LLM_API_KEY: str | None = None
     LLM_MODEL: str | None = None
