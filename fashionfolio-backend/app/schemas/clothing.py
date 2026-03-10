@@ -32,7 +32,7 @@ class ClothingUpdate(BaseModel):
 # ClothingResponse
 # Utilisé quand l'API RETOURNE un vêtement à l'app mobile
 # Contient tous les champs de ClothingCreate + les champs générés par la DB
-class ClothingResponse(BaseModel):
+class ClothingOut(BaseModel):
     id: int  # généré automatiquement par la DB
     user_id: int  # l'utilisateur à qui appartient le vêtement
     type: str
