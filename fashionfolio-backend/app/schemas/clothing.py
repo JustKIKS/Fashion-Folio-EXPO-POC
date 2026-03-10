@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class ClothingCreate(BaseModel):
+class ClothingCreate(BaseModel):    # ajout d'un vetement
     type: str       # 'haut' | 'bas' | 'chaussures' | 'accessoire'
     color: str
     style: str      # 'casual' | 'formel' | 'sportswear' | 'soirée'
@@ -21,7 +21,7 @@ class ClothingUpdate(BaseModel):
     photo_url: str | None = None
 
 
-class ClothingOut(BaseModel):
+class ClothingOut(BaseModel):       # lecture d'un vetement
     id: int
     user_id: int
     type: str
