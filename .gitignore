@@ -1,0 +1,11 @@
+# IDE
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# Environnement
+.env
+.env.local
+.env.*.local
