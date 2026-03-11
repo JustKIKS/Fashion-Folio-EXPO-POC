@@ -44,7 +44,14 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    row = db.execute("SELECT * FROM users WHERE id = ?", (int(user_id),)).fetchone()
+    try:
+        uid = int(user_id)
+    except (ValueError, TypeError):
+        raise credentials_exception
+
+    row = db.execute(
+        "SELECT id, email, username FROM users WHERE id = ?", (uid,)
+    ).fetchone()
     if row is None:
         raise credentials_exception
     return dict(row)
