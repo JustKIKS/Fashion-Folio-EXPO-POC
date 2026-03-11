@@ -28,3 +28,18 @@ def add_friend(receiver_id: int, current_user=Depends(get_current_user)):
     except ValueError as e:
         # Si le service lève une erreur (doublon, self-add), on renvoie une ereur
         raise HTTPException(status_code=400, details=str(e))
+    
+@router.put("/friends/accept/{friendship_id}")
+def accept_friend(friendship_id: int, current_user=Depends(get_current_user)):
+    """
+    Accepte une demande d'ami.
+    L'id de la demande est dans l'URL : /social/friends/accept/1
+    """
+
+    try: 
+        return accept_friend_request(
+            friendship_id=friendship_id,
+            user_id=current_user["id"]
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, details=str(e))
