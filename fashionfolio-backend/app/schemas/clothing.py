@@ -11,13 +11,11 @@ class ClothingCreate(BaseModel):
     color: str  # ex: 'bleu marine', 'blanc cassé'
     style: str # 'casual' | 'formel' | 'sportswear' | 'soirée'
 
-<<<<<<< HEAD
     # Champs optionnels — utiles mais pas indispensables
     pattern: Optional[str] = None # 'uni' | 'rayé' | 'floral' | 'carreaux'
     brand: Optional[str] = None # ex: 'Zara', 'Nike', 'Sandro'
     season: Optional[str] = None  # 'été' | 'hiver' | 'mi-saison' | 'all-season'
     photo_url: Optional[str] = None # (bonus) lien vers la photo du vêtement
-=======
 class ClothingCreate(BaseModel):    # ajout d'un vetement
     type: str
     color: str
@@ -27,7 +25,6 @@ class ClothingCreate(BaseModel):    # ajout d'un vetement
     season: str | None = None
     photo_url: str | None = None
 
->>>>>>> Luka
 
 # ClothingUpdate
 # Utilisé quand l'utilisateur MODIFIE un vêtement existant
