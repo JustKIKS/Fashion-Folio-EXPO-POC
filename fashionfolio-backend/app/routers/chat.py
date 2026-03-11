@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.llm_service import get_outfit_suggestion
 
@@ -7,18 +6,15 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 @router.post("/")
-def chat(message: str, db: Session = Depends(get_db)):
+def chat(message: str, user_id: int, conn=Depends(get_db)):
 
-    # Pour l'instant, dressing hardcodé pour tester
-    wardrobe = [
-        {"id": 1, "type": "top",    "name": "T-shirt blanc",
-            "color": "blanc",  "style": "casual", "brand": "Zara"},
-        {"id": 2, "type": "bottom", "name": "Jean slim bleu",
-            "color": "bleu",   "style": "casual", "brand": "Levi's"},
-        {"id": 3, "type": "shoes",  "name": "Sneakers Nike",
-            "color": "blanc",  "style": "casual", "brand": "Nike"},
-    ]
-    history = []
+    # Remplace le hardcodé par la vraie DB
+    rows = conn.execute(
+        "SELECT * FROM clothing WHERE user_id = ?", (user_id,)
+    ).fetchall()
+    wardrobe = [dict(row) for row in rows]
+
+    history = []  # à brancher aussi plus tard
 
     result = get_outfit_suggestion(wardrobe, history, message)
     return result

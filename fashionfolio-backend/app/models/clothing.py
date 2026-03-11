@@ -5,11 +5,11 @@ from dataclasses import dataclass
 class Clothing:
     id: int
     user_id: int
-    type: str        # "top", "bottom", "shoes", "accessory"
+    type: str
     color: str
-    style: str       # "casual", "formel", "sportswear"
-    pattern: str     # "uni", "rayé", "floral"
+    style: str
+    pattern: str
     brand: str
-    season: str      # "été", "hiver", "mi-saison", "all-season"
+    season: str
     photo_url: str | None
     created_at: str

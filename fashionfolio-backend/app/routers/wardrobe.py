@@ -45,7 +45,8 @@ def update_item(
     db: sqlite3.Connection = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    item = wardrobe_service.update_clothing(db, clothing_id, current_user["id"], payload)
+    item = wardrobe_service.update_clothing(
+        db, clothing_id, current_user["id"], payload)
     if not item:
         raise HTTPException(status_code=404, detail="Vêtement introuvable")
     return item
@@ -57,6 +58,7 @@ def delete_item(
     db: sqlite3.Connection = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    deleted = wardrobe_service.delete_clothing(db, clothing_id, current_user["id"])
+    deleted = wardrobe_service.delete_clothing(
+        db, clothing_id, current_user["id"])
     if not deleted:
         raise HTTPException(status_code=404, detail="Vêtement introuvable")
