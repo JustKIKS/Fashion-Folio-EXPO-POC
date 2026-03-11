@@ -59,3 +59,31 @@ def accept_friend_request(friendship_id: int, user_id: int):
     db.close()
 
     return {"message": "Demande d'ami acceptée."}
+
+def get_friends(user_id: int):
+    """
+    Retourne la liste des amis acceptés d'un utilisateur.
+    On cherche les relations où l'user est soit requester soit receiver.
+    """
+
+    db = get_db()
+
+    # On récupère tous les amis acceptés — l'user peut être des deux côtés de la relation
+    friends = db.execute(
+        """
+        SELECT u.id, u.username, u.email, u.avatar_url
+        FROM users u
+        JOIN friendships f ON (
+            (f.requester_id = ? AND f.receiver_id = u.id)
+            OR
+            (f.receiver_id = ? AND f.requester_id = u.id)
+        )
+        WHERE f.status = 'accepted'
+        """,
+        (user_id, user_id)
+    ).fetchall()
+
+    db.close()
+
+    # Convertit les résultats en liste de dictionnaires
+    return [dict(friend) for friend in friends]
