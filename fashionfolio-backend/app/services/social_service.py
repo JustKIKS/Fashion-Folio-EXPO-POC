@@ -87,3 +87,34 @@ def get_friends(user_id: int):
 
     # Convertit les résultats en liste de dictionnaires
     return [dict(friend) for friend in friends]
+
+def get_friends_outfits(user_id: int):
+    """
+    Retourne les tenues publiées (is_published = 1) des amis d'un utilisateur.
+    Utilisé pour l'espace social.
+    """
+
+    db = get_db()
+
+    # Récupère les tenues publiées des amis - l'user peut être des 2 cotés de la relation
+    outfits = db.execute(
+        """
+        SELECT o.id o.user_id, o.description, o.created_at, u.username
+        FROM outfits o
+        JOIN users u ON o.user_id = u.id
+        JOIN friendship f ON (
+            (f.requester_id = ? AND f.receiver_id = o.user_id)
+            OR
+            (f.receiver_id = ?  AND f.requester_id = o.user_id)
+        )
+        WHERE o.is_puvlished = 1
+        AND f.status = 'accepted'
+        ORDER BY o.created_at DESC
+        """,
+        (user_id, user_id)
+    ).fetchall()
+
+    db.close()
+
+    # Convertit les résultats en liste de dictionnaires
+    return [dict(outfit) for outfit in outfits]
