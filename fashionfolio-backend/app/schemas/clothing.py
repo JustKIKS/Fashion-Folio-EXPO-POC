@@ -2,9 +2,9 @@ from pydantic import BaseModel
 
 
 class ClothingCreate(BaseModel):    # ajout d'un vetement
-    type: str       # 'haut' | 'bas' | 'chaussures' | 'accessoire'
+    type: str
     color: str
-    style: str      # 'casual' | 'formel' | 'sportswear' | 'soirée'
+    style: str
     pattern: str | None = None
     brand: str | None = None
     season: str | None = None
