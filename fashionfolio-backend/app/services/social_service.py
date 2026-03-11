@@ -32,3 +32,30 @@ def send_friend_request(requester_id: int, receiver_id: int):
 
     return {"message": "Demande d'ami envoyée avec succès."}
 
+def accept_friend_request(friendship_id: int, user_id: int):
+    """
+    Accepte une demande d'ami.
+    Seul le receiver peut accepter la demande.
+    Met à jour le status en 'accepted'.
+    """
+    db = get_db()
+
+    # Vérifie que la demande existe et que c'est bien le receiver qui accepte
+    friendship = db.execute(
+        "SELECT * FROM friendships WHERE id = ? AND receiver_id = ? AND status = 'pending'",
+        (friendship_id, user_id)
+    ).fetchone()
+
+    if not friendship:
+        raise ValueError("Demande d'ami introuvable ou déjà traitée.")
+    
+    # Met à jour le status en 'accepted'
+    db.execute(
+        "UPDATE friendships SET status = 'accepted' WHERE id = ?",
+        (friendship_id,)
+    )
+
+    db.commit()
+    db.close()
+
+    return {"message": "Demande d'ami acceptée."}
