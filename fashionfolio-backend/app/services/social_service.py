@@ -118,3 +118,25 @@ def get_friends_outfits(user_id: int):
 
     # Convertit les résultats en liste de dictionnaires
     return [dict(outfit) for outfit in outfits]
+
+def get_pending_requests(user_id: int):
+    """
+    Retourne les demandes d'ami en attente reçues par un utilisateur.
+    """
+    db = get_db()
+
+    # Récupère les demandes en attente ou l'user est le receiver
+    requests = db.execute(
+        """
+        SELECT f.id, f.requester_id, f.created_at, u.username, u.avatar_url
+        FROM friendship f
+        JOIN users u ON f.requester_id = u.id
+        WHERE f.receiver_id = ? AND f.status = 'pending'
+        ORDER BY f.created_at DESC
+        """,
+        (user_id,)
+    ).fetchall()
+
+    db.close()
+
+    return [dict(request) for request in requests]
