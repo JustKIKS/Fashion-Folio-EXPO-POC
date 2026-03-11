@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.database import init_db
-from app.routers import auth, wardrobe, chat
+from app.routers import auth, wardrobe, chat, social
 
 
 # Création de l'application FastAPI
@@ -25,6 +25,7 @@ def startup():
 app.include_router(auth.router)
 app.include_router(wardrobe.router)
 app.include_router(chat.router)
+app.include_router(social.router)
 
 # Route de base — permet de vérifier rapidement que l'API tourne
 # Accessible sur http://localhost:8000/
