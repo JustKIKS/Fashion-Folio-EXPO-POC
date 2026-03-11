@@ -5,7 +5,7 @@ from app.services.social_service import(
     accept_friend_request,
     get_friends,
     get_friends_outfits, 
-    ge_pending_request
+    get_pending_requests
 )
 
 # On crée le router avec le préfixe/social
@@ -43,3 +43,27 @@ def accept_friend(friendship_id: int, current_user=Depends(get_current_user)):
         )
     except ValueError as e:
         raise HTTPException(status_code=400, details=str(e))
+    
+@router.get("/friends")
+def list_friends(current_user=Depends(get_current_user)):
+    """
+    Retorune la liste des amis de l'utilisateur connecté
+    """
+
+    # On passe juste l'id de l'utilisateur connecté au service
+    return get_friends(user_id=current_user["id"])
+
+@router.get("/friends/outfits")
+def list_friends_outfits(current_user=Depends(get_current_user)):
+    """
+    Retourne les tenues publiées des amis de l'utilisateur connecté.
+    C'est le fil d'actualité social de l'app.
+    """
+    return get_friends_outfits(user_id=current_user["id"])
+
+@router.get("/friends/pending")
+def list_pending_requests(current_user=Depends(get_current_user)):
+    """
+    Retourne les demandes d'ami en attente reçues par l'utilisateur connecté.
+    """
+    return get_pending_requests(user_id=current_user["id"])
