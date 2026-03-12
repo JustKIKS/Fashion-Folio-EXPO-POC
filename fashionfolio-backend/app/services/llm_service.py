@@ -1,6 +1,7 @@
 from google import genai
 import json
 from app.config import settings
+import base64
 
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
@@ -68,6 +69,41 @@ def get_outfit_suggestion(wardrobe: list, outfit_history: list, user_message: st
     print("=== RÉPONSE GEMINI ===")
     print(response.text)
     print("=====================")
+
+    raw = response.text.strip()
+    raw = raw.replace("```json", "").replace("```", "").strip()
+
+    return json.loads(raw)
+
+
+def analyze_clothing_photo(image_bytes: bytes) -> dict:
+
+    # Encode l'image en base64
+    image_b64 = base64.b64encode(image_bytes).decode("utf-8")
+
+    prompt = """
+Analyse ce vêtement et retourne UNIQUEMENT un JSON valide sans texte autour.
+
+FORMAT OBLIGATOIRE :
+{
+  "type": "top | bottom | shoes | accessory",
+  "color": "couleur principale en français",
+  "style": "casual | formel | sportswear | soirée",
+  "pattern": "uni | rayé | floral | carreaux | autre",
+  "brand": "marque si visible sinon null",
+  "season": "été | hiver | mi-saison | all-season"
+}
+"""
+
+    response = client.models.generate_content(
+        model=settings.GEMINI_MODEL,
+        contents=[
+            {"role": "user", "parts": [
+                {"inline_data": {"mime_type": "image/jpeg", "data": image_b64}},
+                {"text": prompt}
+            ]}
+        ]
+    )
 
     raw = response.text.strip()
     raw = raw.replace("```json", "").replace("```", "").strip()
