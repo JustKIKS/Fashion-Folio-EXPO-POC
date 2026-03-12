@@ -9,13 +9,13 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 @router.post("/")
 def chat(message: str, user_id: int, conn=Depends(get_db)):
 
-    # 1. Récupère le dressing depuis la DB
+    # Pull le dressing depuis la DB
     rows = conn.execute(
         "SELECT * FROM clothing WHERE user_id = ?", (user_id,)
     ).fetchall()
     wardrobe = [dict(row) for row in rows]
 
-    # 2. Récupère ou crée la conversation
+    # pull ou crée la conversation
     conv = conn.execute(
         "SELECT * FROM conversations WHERE user_id = ? ORDER BY created_at DESC LIMIT 1",
         (user_id,)
@@ -33,10 +33,10 @@ def chat(message: str, user_id: int, conn=Depends(get_db)):
         conn.commit()
         conv_id = cursor.lastrowid
 
-    # 3. Appelle le LLM avec le dressing + l'historique
+    # call le LLM avec fressing + historique
     result = get_outfit_suggestion(wardrobe, history, message)
 
-    # 4. Sauvegarde le message user + la réponse en DB
+    # save le message user + la rep en DB
     history.append({"role": "user",      "content": message})
     history.append(
         {"role": "assistant", "content": json.dumps(result, ensure_ascii=False)})
@@ -46,7 +46,7 @@ def chat(message: str, user_id: int, conn=Depends(get_db)):
         (json.dumps(history, ensure_ascii=False), conv_id)
     )
 
-    # 5. Sauvegarde la tenue dans outfits + outfit_items
+    # save la tenue dans outfits + outfit_items
     if result.get("outfit") and not result.get("out_of_scope"):
         cursor = conn.execute(
             "INSERT INTO outfits (user_id, description) VALUES (?, ?)",
