@@ -102,7 +102,7 @@ def get_friends_outfits(user_id: int):
         SELECT o.id, o.user_id, o.description, o.created_at, u.username
         FROM outfits o
         JOIN users u ON o.user_id = u.id
-        JOIN friendship f ON (
+        JOIN friendships f ON (
             (f.requester_id = ? AND f.receiver_id = o.user_id)
             OR
             (f.receiver_id = ?  AND f.requester_id = o.user_id)
@@ -140,3 +140,32 @@ def get_pending_requests(user_id: int):
     db.close()
 
     return [dict(request) for request in requests]
+
+def publish_outfit(outfit_id: int, user_id: int):
+    """
+    Publie une tenue pour la partager avec ses amis.
+    Seul le propriétaire de la tenue peut la publier.
+    Met à jour is_published = 1 dans la table outfits.
+    """
+
+    db = get_db()
+
+    # Vérifie que la tenue appartient bien à l'utilisateur connecté
+    outfit = db.execute(
+        "SELECT * FROM outfits WHERE id = ?  AND user_id = ?",
+        (outfit_id, user_id)
+    ).fetchone()
+
+    if not outfit:
+        raise ValueError("Tenue introuvable ou vous n'êtes pas le propriétaire.")
+    
+    # Met à jour is_published à 1 pour rendre la tenue visible aux amis
+    db.execute(
+        "UPDATE outfits SET is_published = 1 WHERE id = ?", 
+        (outfit_id,)
+    )
+
+    db.commit()
+    db.close()
+
+    return {"message": "Tenue publiée avec succès."}
