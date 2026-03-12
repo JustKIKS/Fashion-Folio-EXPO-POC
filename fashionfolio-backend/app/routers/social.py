@@ -5,7 +5,8 @@ from app.services.social_service import(
     accept_friend_request,
     get_friends,
     get_friends_outfits, 
-    get_pending_requests
+    get_pending_requests,
+    publish_outfit
 )
 
 # On crée le router avec le préfixe/social
@@ -27,7 +28,7 @@ def add_friend(receiver_id: int, current_user=Depends(get_current_user)):
         )
     except ValueError as e:
         # Si le service lève une erreur (doublon, self-add), on renvoie une ereur
-        raise HTTPException(status_code=400, details=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
     
 @router.put("/friends/accept/{friendship_id}")
 def accept_friend(friendship_id: int, current_user=Depends(get_current_user)):
@@ -42,7 +43,7 @@ def accept_friend(friendship_id: int, current_user=Depends(get_current_user)):
             user_id=current_user["id"]
         )
     except ValueError as e:
-        raise HTTPException(status_code=400, details=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
     
 @router.get("/friends")
 def list_friends(current_user=Depends(get_current_user)):
@@ -67,3 +68,18 @@ def list_pending_requests(current_user=Depends(get_current_user)):
     Retourne les demandes d'ami en attente reçues par l'utilisateur connecté.
     """
     return get_pending_requests(user_id=current_user["id"])
+
+@router.post("/outfits/{outfit_id}/publish")
+def publish(outfit_id: int, current_user=Depends(get_current_user)):
+    """
+    Publie une tenue pour la partager avec ses amis.
+    L'id de la tenue est dans l'URL : /social/outfits/1/publish
+    """
+
+    try:
+        return publish_outfit(
+            outfit_id=outfit_id,
+            user_id=current_user["id"]
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
