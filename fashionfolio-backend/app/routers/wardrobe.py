@@ -7,6 +7,10 @@ from app.schemas.clothing import ClothingCreate, ClothingUpdate, ClothingOut
 from app.services import wardrobe_service
 from fastapi import UploadFile, File
 from app.services.llm_service import analyze_clothing_photo
+import os
+import aiofiles
+from fastapi import UploadFile, File
+from app.services.llm_service import analyze_clothing_photo
 
 router = APIRouter(prefix="/wardrobe", tags=["wardrobe"])
 
@@ -46,13 +50,23 @@ async def upload_photo(user_id: int, file: UploadFile = File(...)):
     image_bytes = await file.read()
     attributes = analyze_clothing_photo(image_bytes)
 
-    # Ouvre une connexion directement dans la route
+    # Sauvegarde l'image en local
+    extension = file.filename.split(".")[-1]
+    filename = f"user_{user_id}_{os.urandom(4).hex()}.{extension}"
+    filepath = f"uploads/clothing/{filename}"
+
+    async with aiofiles.open(filepath, "wb") as f:
+        await f.write(image_bytes)
+
+    photo_url = f"http://localhost:8000/uploads/clothing/{filename}"
+
+    # Insère en DB avec la photo_url
     from app.database import get_connection
     conn = get_connection()
     cursor = conn.execute(
-        "INSERT INTO clothing (user_id, type, color, style, pattern, brand, season) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO clothing (user_id, type, color, style, pattern, brand, season, photo_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (user_id, attributes["type"], attributes["color"], attributes["style"],
-         attributes.get("pattern"), attributes.get("brand"), attributes.get("season"))
+         attributes.get("pattern"), attributes.get("brand"), attributes.get("season"), photo_url)
     )
     conn.commit()
     conn.close()
@@ -60,6 +74,7 @@ async def upload_photo(user_id: int, file: UploadFile = File(...)):
     return {
         "message": "Vêtement ajouté automatiquement ✅",
         "id": cursor.lastrowid,
+        "photo_url": photo_url,
         "attributes": attributes
     }
 

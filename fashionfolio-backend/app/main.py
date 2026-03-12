@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.database import init_db
 from app.routers import auth, wardrobe, chat, social
+from fastapi.staticfiles import StaticFiles
 
 
 # Création de l'application FastAPI
@@ -29,6 +30,8 @@ app.include_router(social.router)
 
 # Route de base — permet de vérifier rapidement que l'API tourne
 # Accessible sur http://localhost:8000/
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
 @app.get("/")
