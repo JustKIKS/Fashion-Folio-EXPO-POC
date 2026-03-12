@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from app.database import get_db
-from app.auth_utils import get_current_user
 from app.services.llm_service import get_outfit_suggestion
 import json
 
@@ -8,16 +7,15 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 @router.post("/")
-def chat(message: str, conn=Depends(get_db), current_user: dict = Depends(get_current_user)):
-    user_id = current_user["id"]
+def chat(message: str, user_id: int, conn=Depends(get_db)):
 
-    # pull le dressing depuis la DB
+    # 1. Récupère le dressing depuis la DB
     rows = conn.execute(
         "SELECT * FROM clothing WHERE user_id = ?", (user_id,)
     ).fetchall()
     wardrobe = [dict(row) for row in rows]
 
-    # pull ou crée la conversation
+    # 2. Récupère ou crée la conversation
     conv = conn.execute(
         "SELECT * FROM conversations WHERE user_id = ? ORDER BY created_at DESC LIMIT 1",
         (user_id,)
@@ -35,10 +33,10 @@ def chat(message: str, conn=Depends(get_db), current_user: dict = Depends(get_cu
         conn.commit()
         conv_id = cursor.lastrowid
 
-    # Call le LLM avec dessing + historique
+    # 3. Appelle le LLM avec le dressing + l'historique
     result = get_outfit_suggestion(wardrobe, history, message)
 
-    # save le message user + la rep en DB
+    # 4. Sauvegarde le message user + la réponse en DB
     history.append({"role": "user",      "content": message})
     history.append(
         {"role": "assistant", "content": json.dumps(result, ensure_ascii=False)})
@@ -48,7 +46,7 @@ def chat(message: str, conn=Depends(get_db), current_user: dict = Depends(get_cu
         (json.dumps(history, ensure_ascii=False), conv_id)
     )
 
-    # Save la tenue dans outfits + outfit_items
+    # 5. Sauvegarde la tenue dans outfits + outfit_items
     if result.get("outfit") and not result.get("out_of_scope"):
         cursor = conn.execute(
             "INSERT INTO outfits (user_id, description) VALUES (?, ?)",
