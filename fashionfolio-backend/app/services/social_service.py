@@ -99,7 +99,7 @@ def get_friends_outfits(user_id: int):
     # Récupère les tenues publiées des amis - l'user peut être des 2 cotés de la relation
     outfits = db.execute(
         """
-        SELECT o.id o.user_id, o.description, o.created_at, u.username
+        SELECT o.id, o.user_id, o.description, o.created_at, u.username
         FROM outfits o
         JOIN users u ON o.user_id = u.id
         JOIN friendship f ON (
@@ -107,7 +107,7 @@ def get_friends_outfits(user_id: int):
             OR
             (f.receiver_id = ?  AND f.requester_id = o.user_id)
         )
-        WHERE o.is_puvlished = 1
+        WHERE o.is_published = 1
         AND f.status = 'accepted'
         ORDER BY o.created_at DESC
         """,
@@ -129,7 +129,7 @@ def get_pending_requests(user_id: int):
     requests = db.execute(
         """
         SELECT f.id, f.requester_id, f.created_at, u.username, u.avatar_url
-        FROM friendship f
+        FROM friendships f
         JOIN users u ON f.requester_id = u.id
         WHERE f.receiver_id = ? AND f.status = 'pending'
         ORDER BY f.created_at DESC
