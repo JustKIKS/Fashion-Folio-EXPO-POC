@@ -1,5 +1,11 @@
 # 👔 FashionFolio - Backend API
 
+<p>
+  <img src="./fashionfolio-backend/imgMD/Full%20logo%20(for%20clear%20background).png" alt="FashionFolio" width="550"/>
+</p>
+
+---
+
 Backend du POC **FashionFolio**, une application mobile dédiée à la mode et au style, propulsée par l'intelligence artificielle.
 
 ---
@@ -16,15 +22,15 @@ FashionFolio repose sur trois piliers :
 
 ## 🛠️ Stack technique
 
-| Technologie | Rôle |
-|---|---|
-| **Python 3.12** | Langage principal |
-| **FastAPI** | Framework API REST |
-| **SQLite** | Base de données |
-| **Pydantic** | Validation des données |
+| Technologie       | Rôle                             |
+| ----------------- | -------------------------------- |
+| **Python 3.12**   | Langage principal                |
+| **FastAPI**       | Framework API REST               |
+| **SQLite**        | Base de données                  |
+| **Pydantic**      | Validation des données           |
 | **Google Gemini** | LLM pour la génération de tenues |
-| **JWT** | Authentification |
-| **Uvicorn** | Serveur ASGI |
+| **JWT**           | Authentification                 |
+| **Uvicorn**       | Serveur ASGI                     |
 
 ---
 
@@ -90,39 +96,44 @@ La documentation Swagger est accessible sur `http://localhost:8000/docs`
 ## 📡 Endpoints principaux
 
 ### 🔐 Authentification
-| Méthode | Route | Description |
-|---|---|---|
-| POST | `/auth/register` | Créer un compte |
-| POST | `/auth/login` | Se connecter et obtenir un token JWT |
+
+| Méthode | Route            | Description                          |
+| ------- | ---------------- | ------------------------------------ |
+| POST    | `/auth/register` | Créer un compte                      |
+| POST    | `/auth/login`    | Se connecter et obtenir un token JWT |
 
 ### 👗 Dressing
-| Méthode | Route | Description |
-|---|---|---|
-| GET | `/wardrobe/` | Lister ses vêtements |
-| POST | `/wardrobe/` | Ajouter un vêtement |
-| PUT | `/wardrobe/{id}` | Modifier un vêtement |
-| DELETE | `/wardrobe/{id}` | Supprimer un vêtement |
+
+| Méthode | Route            | Description           |
+| ------- | ---------------- | --------------------- |
+| GET     | `/wardrobe/`     | Lister ses vêtements  |
+| POST    | `/wardrobe/`     | Ajouter un vêtement   |
+| PUT     | `/wardrobe/{id}` | Modifier un vêtement  |
+| DELETE  | `/wardrobe/{id}` | Supprimer un vêtement |
 
 ### 🤖 Chat IA
-| Méthode | Route | Description |
-|---|---|---|
-| POST | `/chat/` | Envoyer un message et recevoir une suggestion de tenue |
+
+| Méthode | Route    | Description                                            |
+| ------- | -------- | ------------------------------------------------------ |
+| POST    | `/chat/` | Envoyer un message et recevoir une suggestion de tenue |
 
 ### 👥 Social
-| Méthode | Route | Description |
-|---|---|---|
-| POST | `/social/friend/request/{id}` | Envoyer une demande d'ami |
-| PUT | `/social/friends/accept/{id}` | Accepter une demande d'ami |
-| GET | `/social/friends` | Lister ses amis |
-| GET | `/social/friends/pending` | Voir les demandes en attente |
-| GET | `/social/friends/outfits` | Voir les tenues publiées de ses amis |
-| POST | `/social/outfits/{id}/publish` | Publier une tenue |
+
+| Méthode | Route                          | Description                          |
+| ------- | ------------------------------ | ------------------------------------ |
+| POST    | `/social/friend/request/{id}`  | Envoyer une demande d'ami            |
+| PUT     | `/social/friends/accept/{id}`  | Accepter une demande d'ami           |
+| GET     | `/social/friends`              | Lister ses amis                      |
+| GET     | `/social/friends/pending`      | Voir les demandes en attente         |
+| GET     | `/social/friends/outfits`      | Voir les tenues publiées de ses amis |
+| POST    | `/social/outfits/{id}/publish` | Publier une tenue                    |
 
 ---
 
 ## 🤖 Périmètre IA
 
 **Ce que l'IA fait :**
+
 - Génère des tenues simples, cohérentes et esthétiques
 - S'appuie uniquement sur le dressing de l'utilisateur
 - Répond via une interface conversationnelle
@@ -130,6 +141,7 @@ La documentation Swagger est accessible sur `http://localhost:8000/docs`
 - Présente les vêtements dans l'ordre logique (haut → bas → chaussures → accessoires)
 
 **Ce que l'IA ne fait pas :**
+
 - Proposer des vêtements inexistants dans le dressing
 - Répondre à des questions hors périmètre mode
 - Se comporter comme un chatbot généraliste

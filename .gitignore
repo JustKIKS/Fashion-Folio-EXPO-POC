@@ -34,3 +34,6 @@ build/
 
 # Alembic
 alembic/versions/*.pyc
+
+#img de l user
+uploads/
