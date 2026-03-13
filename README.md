@@ -135,4 +135,3 @@ La documentation Swagger est accessible sur `http://localhost:8000/docs`
 - Se comporter comme un chatbot généraliste
 
 ---
-
