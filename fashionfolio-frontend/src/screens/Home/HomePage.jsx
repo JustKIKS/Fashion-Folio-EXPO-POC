@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  Home,
   Shirt,
-  ShoppingBag,
-  Users,
-  User,
   Moon,
   Bell,
   Sparkles,
-  Calendar,
   TrendingUp,
   RefreshCw,
 } from "lucide-react-native";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const IMAGE_SIZE = (SCREEN_WIDTH - 32 - 8) / 2; // padding 16*2 + gap 8
 
 const PRIMARY = "#7C3AED";
 const PURPLE_100 = "#EDE9FE";
 const PURPLE_50 = "#F5F3FF";
 
 const PLACEHOLDER_IMAGES = [
-  "https://picsum.photos/seed/outfit1/200/200",
-  "https://picsum.photos/seed/outfit2/200/200",
-  "https://picsum.photos/seed/outfit3/200/200",
-  "https://picsum.photos/seed/outfit4/200/200",
+  "https://picsum.photos/seed/outfit1/300/300",
+  "https://picsum.photos/seed/outfit2/300/300",
+  "https://picsum.photos/seed/outfit3/300/300",
+  "https://picsum.photos/seed/outfit4/300/300",
 ];
 
 export default function HomePage() {
@@ -109,29 +107,20 @@ export default function HomePage() {
           <Text style={styles.sectionSub}>Sélectionné pour vous par l'IA</Text>
           <View style={styles.imageGrid}>
             {PLACEHOLDER_IMAGES.map((uri, i) => (
-              <Image key={i} source={{ uri }} style={styles.gridImage} />
+              <Image
+                key={i}
+                source={{ uri }}
+                style={styles.gridImage}
+              />
             ))}
           </View>
-        </View>
-
-        {/* 5. Stats card */}
-        <View style={styles.statsCard}>
-          <View style={styles.statCol}>
-            <Shirt size={20} color="#fff" />
-            <Text style={styles.statNumber}>5</Text>
-            <Text style={styles.statLabel}>Articles</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statCol}>
-            <Calendar size={20} color="#fff" />
-            <Text style={styles.statNumber}>42</Text>
-            <Text style={styles.statLabel}>Portés</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statCol}>
-            <TrendingUp size={20} color="#fff" />
-            <Text style={styles.statNumber}>2</Text>
-            <Text style={styles.statLabel}>Styles</Text>
+          <View style={styles.lookButtons}>
+            <TouchableOpacity style={styles.btnOutline}>
+              <Text style={styles.btnOutlineText}>Historique</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnFilled}>
+              <Text style={styles.btnFilledText}>Je le porte</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -326,44 +315,49 @@ const styles = StyleSheet.create({
   imageGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
+    justifyContent: "space-between",
+    rowGap: 8,
   },
   gridImage: {
-    width: "48%",
-    aspectRatio: 1,
+    width: IMAGE_SIZE,
+    height: IMAGE_SIZE,
     borderRadius: 12,
     backgroundColor: "#F3F4F6",
   },
 
-  // Stats card
-  statsCard: {
-    backgroundColor: PRIMARY,
-    borderRadius: 16,
-    padding: 20,
+  // Look buttons
+  lookButtons: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    marginBottom: 24,
+    gap: 10,
+    marginTop: 12,
   },
-  statCol: {
+  btnOutline: {
+    flex: 1,
+    borderWidth: 1.5,
+    borderColor: PRIMARY,
+    borderRadius: 10,
+    paddingVertical: 11,
     alignItems: "center",
-    gap: 4,
+    backgroundColor: "#fff",
   },
-  statNumber: {
+  btnOutlineText: {
+    color: PRIMARY,
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  btnFilled: {
+    flex: 1,
+    backgroundColor: PRIMARY,
+    borderRadius: 10,
+    paddingVertical: 11,
+    alignItems: "center",
+  },
+  btnFilledText: {
     color: "#fff",
-    fontSize: 22,
-    fontWeight: "800",
-    marginTop: 4,
+    fontWeight: "600",
+    fontSize: 14,
   },
-  statLabel: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: 11,
-  },
-  statDivider: {
-    width: 1,
-    height: 48,
-    backgroundColor: "rgba(255,255,255,0.25)",
-  },
+
 
   // Actions grid
   actionsGrid: {
@@ -404,44 +398,4 @@ const styles = StyleSheet.create({
     color: "#6B7280",
   },
 
-  // Bottom nav
-  bottomNav: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
-    paddingVertical: 8,
-    paddingBottom: 12,
-  },
-  navTab: {
-    flex: 1,
-    alignItems: "center",
-    gap: 3,
-  },
-  navLabel: {
-    fontSize: 10,
-    color: "#9CA3AF",
-    fontWeight: "500",
-  },
-  navLabelActive: {
-    color: PRIMARY,
-    fontWeight: "700",
-  },
-  navBadge: {
-    position: "absolute",
-    top: -4,
-    right: -6,
-    backgroundColor: "#EF4444",
-    borderRadius: 8,
-    minWidth: 15,
-    height: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 3,
-  },
-  navBadgeText: {
-    color: "#fff",
-    fontSize: 8,
-    fontWeight: "700",
-  },
 });
