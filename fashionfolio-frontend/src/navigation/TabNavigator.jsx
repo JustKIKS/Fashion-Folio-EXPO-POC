@@ -8,7 +8,7 @@ import {
   User,
 } from "lucide-react-native";
 
-import HomeScreen from "../screens/Home/HomeScreen";
+import HomeScreen from "../screens/Home/HomePage";
 import DressingListScreen from "../screens/Dressing/DressingListScreen";
 import ChatScreen from "../screens/Chat/ChatScreen";
 import SocialScreen from "../screens/Social/FeedScreen";
@@ -21,7 +21,7 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: "#FF6B6B",
+        tabBarActiveTintColor: "#4A26D0",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: { height: 60, paddingBottom: 10 },
       })}
