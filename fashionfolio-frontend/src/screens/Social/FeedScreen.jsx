@@ -7,7 +7,7 @@ const MOCK_POSTS = [
   {
     id: "1",
     username: "sophie_m",
-    avatar: "https://picsum.photos/seed/user1/150",
+    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     image_url: "https://images.unsplash.com/photo-1687825519599-8724ef446d7d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     caption: "Look du jour ✨",
     likes_count: 42,
@@ -17,7 +17,7 @@ const MOCK_POSTS = [
   {
     id: "2",
     username: "luka_broubrou",
-    avatar: "https://picsum.photos/seed/user2/150",
+    avatar: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     image_url: "https://plus.unsplash.com/premium_photo-1769290472469-a8a7aa929fc9?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     caption: "Ma tenue pour la soirée 🔥",
     likes_count: 30,
@@ -27,7 +27,7 @@ const MOCK_POSTS = [
   {
     id: "3",
     username: "max_gogo",
-    avatar: "https://picsum.photos/seed/user3/150",
+    avatar: "https://images.unsplash.com/photo-1625181796571-7f0d4571ab12?q=80&w=702&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     image_url: "https://plus.unsplash.com/premium_photo-1688497831535-120bd47d9f9c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     caption: "Nouvelle pièce dans mon dressing 👗",
     likes_count: 50,
