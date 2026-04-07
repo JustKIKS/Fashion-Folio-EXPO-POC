@@ -1,23 +1,11 @@
-import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import TabNavigator from "./src/navigation/TabNavigator";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>FashionFolio 👗</Text>
-    </View>
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1C0256",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    color: "#C084FC",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-});

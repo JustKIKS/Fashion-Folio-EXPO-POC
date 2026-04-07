@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.database import init_db
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, wardrobe, chat, social
 from fastapi.staticfiles import StaticFiles
 
@@ -13,6 +14,13 @@ app = FastAPI(
 )
 
 # Ce décorateur dit à FastAPI : "exécute cette fonction automatiquement au démarrage de l'app"
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Autorise ton téléphone à se connecter
+    allow_credentials=True,
+    allow_methods=["*"],  # Autorise toutes les méthodes (GET, POST, etc.)
+    allow_headers=["*"],  # Autorise tous les headers
+)
 
 
 @app.on_event("startup")
