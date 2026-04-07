@@ -9,7 +9,7 @@ import {
 } from "lucide-react-native";
 
 import HomeScreen from "../screens/Home/HomePage";
-import DressingListScreen from "../screens/Dressing/DressingListScreen";
+import DressingScreen from "../screens/Dressing/DressingListScreen";
 import ChatScreen from "../screens/Chat/ChatScreen";
 import SocialScreen from "../screens/Social/FeedScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
@@ -35,7 +35,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Dressing"
-        component={DressingListScreen}
+        component={DressingScreen}
         options={{
           tabBarIcon: ({ color }) => <Shirt color={color} size={24} />,
         }}
