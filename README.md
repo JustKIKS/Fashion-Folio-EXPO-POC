@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 👔 FashionFolio - Backend API
 
 <p>
