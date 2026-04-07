@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react"; // Fusionné ici
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native"; // Ajouté ici
 import { Search, Plus } from "lucide-react-native";
 
 const categories = [
@@ -25,50 +25,43 @@ const categories = [
 
 export default function DressingScreen() {
   const navigation = useNavigation();
-  const [clothingItems, setClothingItems] = useState([]); // Toujours un tableau par défaut
+  const [clothingItems, setClothingItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  useEffect(() => {
-    loadItems();
-  }, []);
-
-  useEffect(() => {
-    filterItems();
-  }, [searchQuery, selectedCategory, clothingItems]);
+  // RECHARGEMENT AUTOMATIQUE QUAND ON REVIENT SUR L'ÉCRAN
+  useFocusEffect(
+    useCallback(() => {
+      loadItems();
+    }, []),
+  );
 
   const loadItems = async () => {
     try {
       const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
         method: "GET",
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTY5NDM1fQ.wlAzIlrcx-yvm5EdquF11oHbGuq1tkQE8bOzwHDz9Eo`,
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTY5NDM1fQ.wlAzIlrcx-yvm5EdquF11oHbGuq1tkQE8bOzwHDz9Eo",
           "Content-Type": "application/json",
         },
       });
       const data = await response.json();
 
-      // --- SÉCURITÉ CRITIQUE ---
       if (Array.isArray(data)) {
         setClothingItems(data);
         setFilteredItems(data);
-      } else {
-        console.error("Le serveur n'a pas renvoyé de liste :", data);
-        setClothingItems([]); // On force une liste vide
       }
     } catch (error) {
       console.error("Erreur réseau :", error);
-      setClothingItems([]);
     } finally {
       setLoading(false);
     }
   };
 
   const filterItems = () => {
-    // --- SÉCURITÉ LIGNE 57 ---
-    // Si clothingItems n'est pas un tableau, on utilise une liste vide pour éviter le crash
     const baseItems = Array.isArray(clothingItems) ? clothingItems : [];
     let filtered = [...baseItems];
 

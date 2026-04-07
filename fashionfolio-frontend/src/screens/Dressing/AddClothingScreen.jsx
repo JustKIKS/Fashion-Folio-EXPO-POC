@@ -99,9 +99,13 @@ export default function AddClothingScreen() {
     setLoading(true);
     try {
       // APPEL À TON BACKEND FASTAPI
-      const response = await fetch("http://10.1.219.54:8000/clothing/", {
+      const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // N'oublie pas le Token si la route est protégée !
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTcyODA5fQ.pGV_QeWNojtLluFF58p59Dchi4Yi96g3AVvK6arItZU`,
+        },
         body: JSON.stringify({
           ...formData,
           user_id: 1, // ID temporaire
@@ -110,7 +114,7 @@ export default function AddClothingScreen() {
 
       if (response.ok) {
         Alert.alert("Succès", "Vêtement ajouté !");
-        navigation.navigate("Dressing"); // Retour au dressing
+        navigation.goBack();
       } else {
         const errorData = await response.json();
         Alert.alert("Erreur", JSON.stringify(errorData.detail));
