@@ -1,7 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput, FlatList } from 'react-native';
-import { Heart, MessageCircle, Send, Search, X, MoreVertical } from 'lucide-react-native';
 import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { Heart, MessageCircle, Send, Search } from 'lucide-react-native';
 
 const MOCK_POSTS = [
   {
@@ -14,7 +14,6 @@ const MOCK_POSTS = [
     comments_count: 5,
     tags: ["casual", "summer"]
   },
-
   {
     id: "2",
     username: "luka_broubrou",
@@ -25,7 +24,6 @@ const MOCK_POSTS = [
     comments_count: 2,
     tags: ["elegant", "spring"]
   },
-
   {
     id: "3",
     username: "max_gogo",
@@ -36,18 +34,177 @@ const MOCK_POSTS = [
     comments_count: 15,
     tags: ["elegant", "spring"]
   }
-
 ];
 
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [showSearchPanel, setShowSearchPanel] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleLike = (postId) => {
+    setLikedPosts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(postId)) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
+  };
 
   return (
-    <View>
-      
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Social Place</Text>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity onPress={() => setShowSearchPanel(!showSearchPanel)}>
+            <Search color="#1C0256" size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('DMList')}>
+            <MessageCircle color="#1C0256" size={24} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Feed */}
+      <FlatList
+        data={MOCK_POSTS}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.postCard}>
+            {/* Header du post */}
+            <View style={styles.postHeader}>
+              <Image source={{ uri: item.avatar }} style={styles.avatar} />
+              <Text style={styles.username}>{item.username}</Text>
+            </View>
+
+            {/* Image du post */}
+            <Image source={{ uri: item.image_url }} style={styles.postImage} />
+
+            {/* Actions */}
+            <View style={styles.postActions}>
+              <TouchableOpacity onPress={() => handleLike(item.id)}>
+                <Heart
+                  color={likedPosts.has(item.id) ? '#FF3B30' : '#1C0256'}
+                  fill={likedPosts.has(item.id) ? '#FF3B30' : 'none'}
+                  size={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <MessageCircle color="#1C0256" size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Send color="#1C0256" size={24} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Likes et caption */}
+            <Text style={styles.likes}>{item.likes_count} j'aime</Text>
+            <Text style={styles.caption}>
+              <Text style={styles.username}>{item.username} </Text>
+              {item.caption}
+            </Text>
+
+            {/* Tags */}
+            <View style={styles.tagsContainer}>
+              {item.tags.map((tag, idx) => (
+                <View key={idx} style={styles.tag}>
+                  <Text style={styles.tagText}>#{tag}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1C0256',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  postCard: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    overflow: 'hidden',
+  },
+  postHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    gap: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  username: {
+    fontWeight: '600',
+    color: '#1C0256',
+  },
+  postImage: {
+    width: '100%',
+    height: 300,
+  },
+  postActions: {
+    flexDirection: 'row',
+    gap: 16,
+    padding: 12,
+  },
+  likes: {
+    fontWeight: '600',
+    color: '#1C0256',
+    paddingHorizontal: 12,
+  },
+  caption: {
+    color: '#1C0256',
+    paddingHorizontal: 12,
+    paddingBottom: 8,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingBottom: 12,
+  },
+  tag: {
+    backgroundColor: '#EDE9FE',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+  },
+  tagText: {
+    color: '#4A26D0',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+});
