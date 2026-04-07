@@ -91,38 +91,37 @@ export default function AddClothingScreen() {
   };
 
   const handleSubmit = async () => {
-    if (!formData.type || !formData.category) {
-      Alert.alert("Erreur", "Le nom (type) et la catégorie sont obligatoires.");
+    if (!formData.category) {
+      Alert.alert("Erreur", "Tu dois choisir une catégorie (Haut, Bas...)");
       return;
     }
 
     setLoading(true);
     try {
-      // APPEL À TON BACKEND FASTAPI
       const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // N'oublie pas le Token si la route est protégée !
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTcyODA5fQ.pGV_QeWNojtLluFF58p59Dchi4Yi96g3AVvK6arItZU`,
+          Authorization: "Bearer TON_TOKEN",
         },
         body: JSON.stringify({
-          ...formData,
-          user_id: 1, // ID temporaire
+          brand: formData.type, // 🚨 Le NOM (ex: "Jean vert")
+          style: formData.brand || "Sans marque", // 🚨 La MARQUE (ex: "Ami")
+          type: formData.category.toLowerCase(), // La CATÉGORIE (ex: "bas")
+
+          color: formData.color || "N/A",
+          pattern: "uni",
+          season: formData.season || "toute",
+          photo_url: formData.photo_url,
         }),
       });
 
       if (response.ok) {
         Alert.alert("Succès", "Vêtement ajouté !");
         navigation.goBack();
-      } else {
-        const errorData = await response.json();
-        Alert.alert("Erreur", JSON.stringify(errorData.detail));
       }
     } catch (error) {
-      Alert.alert("Erreur", "Impossible de contacter le serveur.");
-    } finally {
-      setLoading(false);
+      console.error(error);
     }
   };
 
