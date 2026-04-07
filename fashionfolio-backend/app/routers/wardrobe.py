@@ -18,9 +18,9 @@ router = APIRouter(prefix="/wardrobe", tags=["wardrobe"])
 @router.get("/", response_model=list[ClothingOut])
 def list_wardrobe(
     db: sqlite3.Connection = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
+    # current_user: dict = Depends(get_current_user),
 ):
-    return wardrobe_service.get_wardrobe(db, current_user["id"])
+    return wardrobe_service.get_wardrobe(db, 1)
 
 
 @router.get("/{clothing_id}", response_model=ClothingOut)

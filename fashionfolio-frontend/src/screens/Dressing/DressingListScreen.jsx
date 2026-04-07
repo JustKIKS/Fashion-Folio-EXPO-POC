@@ -41,7 +41,13 @@ export default function DressingScreen() {
 
   const loadItems = async () => {
     try {
-      const response = await fetch("http://10.1.219.54:8000/clothing/user/1");
+      const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTY5NDM1fQ.wlAzIlrcx-yvm5EdquF11oHbGuq1tkQE8bOzwHDz9Eo`,
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
 
       // --- SÉCURITÉ CRITIQUE ---
