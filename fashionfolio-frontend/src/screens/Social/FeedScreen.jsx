@@ -32,9 +32,10 @@ const MOCK_POSTS = [
     caption: "Nouvelle pièce dans mon dressing 👗",
     likes_count: 50,
     comments_count: 15,
-    tags: ["elegant", "spring"]
+    tags: ["streetwear", "spring"]
   }
 ];
+
 
 export default function FeedScreen() {
   const navigation = useNavigation();
