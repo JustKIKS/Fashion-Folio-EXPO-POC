@@ -279,7 +279,12 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5EA",
     overflow: "hidden",
   },
-  megaAvatarImage: { width: "85%", height: "85%", resizeMode: "contain" },
+  megaAvatarImage: {
+    width: "100%",
+    height: "160%",
+    resizeMode: "cover",
+    transform: [{ translateX: -4 }],
+  },
   bubble: { padding: 18, borderRadius: 24 },
   aiBubble: { backgroundColor: "#F2F2F7", borderBottomLeftRadius: 4 },
   userBubble: { backgroundColor: "#4A26D0", borderBottomRightRadius: 4 },
@@ -335,8 +340,11 @@ const styles = StyleSheet.create({
   sendIcon: { color: "#FFFFFF", fontSize: 22, fontWeight: "bold" },
   landingInputShadow: {
     shadowColor: "#4A26D0",
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 8,
+    shadowOffset: {
+      width: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 15,
+    elevation: 10,
   },
 });

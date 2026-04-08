@@ -115,7 +115,6 @@ export default function DressingScreen() {
       </View>
 
       <View style={styles.cardInfo}>
-        {/* LIGNE 1 : NOM • MARQUE */}
         <Text style={styles.itemName} numberOfLines={1}>
           {item.brand}{" "}
           {item.style && item.style !== "casual" && item.style !== "Sans marque"
@@ -123,7 +122,6 @@ export default function DressingScreen() {
             : ""}
         </Text>
 
-        {/* LIGNE 2 : CATÉGORIE */}
         <Text style={styles.itemBrand} numberOfLines={1}>
           {item.type
             ? item.type.charAt(0).toUpperCase() + item.type.slice(1)
