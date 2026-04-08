@@ -13,7 +13,7 @@ const MOCK_POSTS = [
     likes_count: 42,
     comments_count: 5,
     tags: ["casual", "summer"],
-    created_at: "2026-04-09T10:30:00.000Z"
+    created_at: "2026-04-07T10:30:00.000Z"
   },
   {
     id: "2",
@@ -35,7 +35,7 @@ const MOCK_POSTS = [
     likes_count: 50,
     comments_count: 15,
     tags: ["streetwear", "spring"],
-    created_at: "2026-01-07T20:00:00.000Z"
+    created_at: "2026-01-09T20:00:00.000Z"
   }
 ];
 
