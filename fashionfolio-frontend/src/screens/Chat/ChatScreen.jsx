@@ -99,18 +99,20 @@ export default function ChatScreen() {
     >
       {estAuDebut ? (
         <View style={styles.landingContainer}>
-          {/* CERCLES DÉCORATIFS EN FOND */}
           <View style={styles.bgCircleTop} />
           <View style={styles.bgCircleBottom} />
 
-          {/* TITRE ANCRÉ EN HAUT */}
           <View style={styles.topSection}>
             <Text style={styles.heroTitle}>FashionFolio</Text>
-            <Text style={styles.heroSubtitle}>Ton dressing intelligent.</Text>
+            <Text style={styles.heroSubtitle}>Votre dressing intelligent.</Text>
           </View>
 
-          {/* BLOC CENTRAL (BARRE + SUGGESTIONS) ABAISSÉ */}
           <View style={styles.centerContent}>
+            <View style={styles.greetingWrapper}>
+              <Text style={styles.welcomeText}>Bonjour User</Text>
+              <Text style={styles.questionText}>Par où commencer ?</Text>
+            </View>
+
             <View style={[styles.inputContainer, styles.landingInputShadow]}>
               <TextInput
                 style={styles.input}
@@ -196,18 +198,33 @@ const styles = StyleSheet.create({
   landingContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     paddingHorizontal: 25,
   },
   topSection: {
     position: "absolute",
-    top: 100,
+    top: 80,
+    alignSelf: "center",
     alignItems: "center",
   },
   centerContent: {
     width: "100%",
-    alignItems: "center",
-    marginTop: 190,
+    marginTop: 80, // Espace pour laisser respirer le titre du haut
+  },
+  greetingWrapper: {
+    marginBottom: 20,
+    paddingLeft: 5,
+  },
+  welcomeText: {
+    fontSize: 26,
+    color: "#B0B0B0", // Gris Gemini
+    fontWeight: "400",
+  },
+  questionText: {
+    fontSize: 38,
+    color: "#1C0256",
+    fontWeight: "700",
+    letterSpacing: -1,
+    lineHeight: 45,
   },
   bgCircleTop: {
     position: "absolute",
@@ -230,21 +247,21 @@ const styles = StyleSheet.create({
     opacity: 0.04,
   },
   heroTitle: {
-    fontSize: 44,
+    fontSize: 22,
     fontWeight: "900",
     color: "#4A26D0",
-    letterSpacing: -1.5,
+    letterSpacing: -0.5,
+    opacity: 0.6, // Plus discret en haut
   },
   heroSubtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginTop: 5,
+    fontSize: 12,
+    color: "#AAA",
     fontWeight: "500",
   },
   suggestionsWrapper: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
+    justifyContent: "center", // Aligné à gauche avec le texte
     marginTop: 25,
     gap: 10,
   },
@@ -279,7 +296,12 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5EA",
     overflow: "hidden",
   },
-  megaAvatarImage: { width: "85%", height: "85%", resizeMode: "contain" },
+  megaAvatarImage: {
+    width: "100%",
+    height: "160%",
+    resizeMode: "cover",
+    transform: [{ translateX: -4 }],
+  },
   bubble: { padding: 18, borderRadius: 24 },
   aiBubble: { backgroundColor: "#F2F2F7", borderBottomLeftRadius: 4 },
   userBubble: { backgroundColor: "#4A26D0", borderBottomRightRadius: 4 },
@@ -335,8 +357,9 @@ const styles = StyleSheet.create({
   sendIcon: { color: "#FFFFFF", fontSize: 22, fontWeight: "bold" },
   landingInputShadow: {
     shadowColor: "#4A26D0",
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
     elevation: 8,
   },
 });

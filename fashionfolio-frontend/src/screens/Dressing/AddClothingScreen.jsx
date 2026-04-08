@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { Camera, ArrowLeft, Sparkles, X } from "lucide-react-native";
+import { Camera, ArrowLeft } from "lucide-react-native";
 
 const categories = [
   "haut",
@@ -24,16 +24,6 @@ const categories = [
   "chaussures",
   "accessoire",
   "sac",
-];
-const stylesList = [
-  "casual",
-  "chic",
-  "streetwear",
-  "boheme",
-  "classique",
-  "sportif",
-  "elegant",
-  "vintage",
 ];
 const seasons = ["printemps", "ete", "automne", "hiver"];
 const colors = [
@@ -57,16 +47,14 @@ export default function AddClothingScreen() {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    type: "", // On utilise 'type' pour correspondre à ton backend
+    type: "",
     category: "",
     brand: "",
     color: "",
-    style: "",
     season: "",
     photo_url: null,
   });
 
-  // Fonction pour choisir une image
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -77,8 +65,6 @@ export default function AddClothingScreen() {
 
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
-      // Ici, tu pourrais uploader l'image vers Cloudinary ou S3
-      // pour avoir une vraie photo_url. Pour l'instant on garde l'URI locale.
       setFormData({ ...formData, photo_url: result.assets[0].uri });
     }
   };
@@ -102,13 +88,13 @@ export default function AddClothingScreen() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer TON_TOKEN",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NjU1NjQwfQ.ouO9t_6sZW3RMotQYqc3BcAoLWifclmSLszELU1qWI0",
         },
         body: JSON.stringify({
-          brand: formData.type, // 🚨 Le NOM (ex: "Jean vert")
-          style: formData.brand || "Sans marque", // 🚨 La MARQUE (ex: "Ami")
-          type: formData.category.toLowerCase(), // La CATÉGORIE (ex: "bas")
-
+          type: formData.type,
+          brand: formData.brand || "Sans marque",
+          style: formData.category.toLowerCase(),
           color: formData.color || "N/A",
           pattern: "uni",
           season: formData.season || "toute",
@@ -119,15 +105,18 @@ export default function AddClothingScreen() {
       if (response.ok) {
         Alert.alert("Succès", "Vêtement ajouté !");
         navigation.goBack();
+      } else {
+        Alert.alert("Erreur", "Impossible d'ajouter le vêtement.");
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -142,7 +131,6 @@ export default function AddClothingScreen() {
         style={styles.formContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Upload Box */}
         <TouchableOpacity style={styles.uploadBox} onPress={pickImage}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.previewImage} />
@@ -154,7 +142,6 @@ export default function AddClothingScreen() {
           )}
         </TouchableOpacity>
 
-        {/* Form Inputs */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nom de l'article (ex: T-shirt) *</Text>
           <TextInput
@@ -172,7 +159,6 @@ export default function AddClothingScreen() {
             placeholder="Ex: Zara, Levi's..."
           />
 
-          {/* SÉLECTEURS CHIPS (Catégorie) */}
           <Text style={styles.label}>Catégorie *</Text>
           <View style={styles.chipGroup}>
             {categories.map((cat) => (
@@ -196,7 +182,6 @@ export default function AddClothingScreen() {
             ))}
           </View>
 
-          {/* COULEURS */}
           <Text style={styles.label}>Couleur</Text>
           <View style={styles.chipGroup}>
             {colors.map((c) => (
@@ -217,7 +202,6 @@ export default function AddClothingScreen() {
             ))}
           </View>
 
-          {/* SAISONS */}
           <Text style={styles.label}>Saison</Text>
           <View style={styles.chipGroup}>
             {seasons.map((s) => (
@@ -242,7 +226,6 @@ export default function AddClothingScreen() {
           </View>
         </View>
 
-        {/* Submit Buttons */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.btnCancel}
@@ -314,6 +297,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     fontSize: 16,
     color: "#1C0256",
+  },
+  inputGroup: {
+    marginBottom: 20,
   },
   chipGroup: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {
