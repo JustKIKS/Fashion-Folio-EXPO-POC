@@ -41,3 +41,27 @@ const fakeConversations = [
         unread_count: 0
     }
 ];
+
+export default function DMListScreen() {
+    const navigation = useNavigation();
+    const [conversations] = useState(fakeConversations);
+
+    const getTimeAgo = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInMs = now - date;
+        const diffInMins = Math.floor(diffInMs / 60000);
+        const diffInHours = Math.floor(diffInMs / 3600000);
+        const diffInDays = Math.floor(diffInMs / 86400000);
+
+        if (diffInMins < 60) return `${diffInMins} min`;
+        if (diffInHours < 24) return `${diffInHours}h`;
+        return `${diffInDays}j`;
+    };
+
+    return (
+        <View style={styles.container}>
+
+        </View>
+    );
+}
