@@ -118,8 +118,8 @@ export default function HomePage() {
   const stylesCount = user?.style_preferences?.length ?? 2;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+    <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
