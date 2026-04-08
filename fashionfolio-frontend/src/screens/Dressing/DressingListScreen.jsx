@@ -31,26 +31,13 @@ export default function DressingScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  // 1. CHARGEMENT DE LA DB
   useFocusEffect(
     useCallback(() => {
       loadItems();
     }, []),
   );
 
-  // 2. DÉCLENCHEUR DE FILTRE (IMPORTANT)
-  // Cette fonction s'exécute dès que 'selectedCategory' change
   useEffect(() => {
-    console.log("--- DEBUG FILTRE ---");
-    console.log("Catégorie demandée :", selectedCategory);
-
-    if (clothingItems.length > 0) {
-      console.log(
-        "Premier vêtement en DB - Type :",
-        `"${clothingItems[0].type}"`,
-      );
-    }
-
     filterItems();
   }, [selectedCategory, searchQuery, clothingItems]);
 
@@ -78,24 +65,21 @@ export default function DressingScreen() {
   const filterItems = () => {
     let filtered = [...clothingItems];
 
-    // Filtre par catégorie
     if (selectedCategory !== "all") {
       filtered = filtered.filter((item) => {
-        // Log pour débugger : qu'est-ce qu'on a vraiment en DB ?
-        // console.log(`Comparaison: ${item.type} vs ${selectedCategory}`);
-        return item.type?.toLowerCase() === selectedCategory.toLowerCase();
+        const cat = (item.style || "").toLowerCase().trim();
+        return cat === selectedCategory.toLowerCase();
       });
     }
 
-    // Filtre par recherche
     if (searchQuery) {
+      const search = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(
         (item) =>
-          item.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.type?.toLowerCase().includes(searchQuery.toLowerCase()),
+          (item.type && item.type.toLowerCase().includes(search)) ||
+          (item.brand && item.brand.toLowerCase().includes(search)),
       );
     }
-
     setFilteredItems(filtered);
   };
 
@@ -116,15 +100,13 @@ export default function DressingScreen() {
 
       <View style={styles.cardInfo}>
         <Text style={styles.itemName} numberOfLines={1}>
-          {item.brand}{" "}
-          {item.style && item.style !== "casual" && item.style !== "Sans marque"
-            ? `• ${item.style}`
-            : ""}
+          {item.type}{" "}
+          {item.brand && item.brand !== "Sans marque" ? `• ${item.brand}` : ""}
         </Text>
 
         <Text style={styles.itemBrand} numberOfLines={1}>
-          {item.type
-            ? item.type.charAt(0).toUpperCase() + item.type.slice(1)
+          {item.style
+            ? item.style.charAt(0).toUpperCase() + item.style.slice(1)
             : ""}
         </Text>
       </View>
@@ -133,7 +115,6 @@ export default function DressingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Mon Dressing</Text>
@@ -149,20 +130,18 @@ export default function DressingScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Recherche */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
           <Search color="#909090" size={18} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Rechercher une marque..."
+            placeholder="Rechercher une marque ou un vêtement..."
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
       </View>
 
-      {/* Filtres (ScrollView) */}
       <View style={{ height: 50, marginBottom: 10 }}>
         <ScrollView
           horizontal
@@ -176,7 +155,7 @@ export default function DressingScreen() {
                 styles.categoryChip,
                 selectedCategory === cat.id && styles.categoryChipActive,
               ]}
-              onPress={() => setSelectedCategory(cat.id)} // ICI ON CHANGE L'ÉTAT
+              onPress={() => setSelectedCategory(cat.id)}
             >
               <Text
                 style={[
@@ -191,7 +170,6 @@ export default function DressingScreen() {
         </ScrollView>
       </View>
 
-      {/* Grille */}
       {loading ? (
         <ActivityIndicator
           size="large"
@@ -200,7 +178,7 @@ export default function DressingScreen() {
         />
       ) : (
         <FlatList
-          data={filteredItems} // ON UTILISE BIEN LA LISTE FILTRÉE
+          data={filteredItems}
           renderItem={renderClothingCard}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
@@ -211,9 +189,7 @@ export default function DressingScreen() {
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>
-                Aucun vêtement trouvé dans cette catégorie
-              </Text>
+              <Text style={styles.emptyText}>Aucun vêtement trouvé.</Text>
             </View>
           }
         />
