@@ -129,7 +129,7 @@ export default function HomePage() {
   const stylesCount = user?.style_preferences?.length ?? 2;
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       <ScrollView
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 16,
     paddingTop: 16,
-    paddingBottom: 90,
+    paddingBottom: 16,
     gap: 24,
   },
 

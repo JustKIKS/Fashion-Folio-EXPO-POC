@@ -1,5 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   ShieldCheck,
   Shirt,
@@ -17,13 +18,23 @@ import ProfileScreen from "../screens/Profile/ProfileScreen";
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: "#4A26D0",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { height: 60, paddingBottom: 10 },
+        tabBarStyle: {
+          backgroundColor: "#ffffff",
+          borderTopWidth: 0.5,
+          borderTopColor: "#F3F4F6",
+          elevation: 0,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom,
+          paddingTop: 8,
+        },
       })}
     >
       <Tab.Screen
