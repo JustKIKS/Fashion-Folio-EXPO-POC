@@ -107,7 +107,7 @@ export default function HomePage() {
 
   if (loading) return <LoadingState />;
 
-  const firstName = user?.full_name?.split(" ")[0] ?? "Alex";
+  const firstName = user?.full_name?.split(" ")[0] ?? "User Example";
 
   const outfitCards =
     clothingItems.length > 0
