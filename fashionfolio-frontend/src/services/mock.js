@@ -1,4 +1,4 @@
-export const FAKE_CONVERSATIONS = [
+export let FAKE_CONVERSATIONS = [
     {
         id: "fake-1",
         participant_name: "Sophie Martin",
@@ -32,3 +32,9 @@ export const FAKE_CONVERSATIONS = [
         unread_count: 0
     }
 ];
+
+export const markAsRead = (conversationId) => {
+    FAKE_CONVERSATIONS = FAKE_CONVERSATIONS.map(conv =>
+    conv.id === conversationId ? { ...conv, unread_count: 0 } : conv
+    );
+};
