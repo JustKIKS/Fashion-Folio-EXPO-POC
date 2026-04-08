@@ -13,7 +13,7 @@ const MOCK_POSTS = [
     likes_count: 42,
     comments_count: 5,
     tags: ["casual", "summer"],
-    created_at: "2024-04-08T10:30:00.000Z"
+    created_at: "2026-04-09T10:30:00.000Z"
   },
   {
     id: "2",
@@ -24,7 +24,7 @@ const MOCK_POSTS = [
     likes_count: 30,
     comments_count: 2,
     tags: ["elegant", "spring"],
-    created_at: "2024-04-08T08:15:00.000Z"
+    created_at: "2026-03-08T08:15:00.000Z"
   },
   {
     id: "3",
@@ -35,7 +35,7 @@ const MOCK_POSTS = [
     likes_count: 50,
     comments_count: 15,
     tags: ["streetwear", "spring"],
-    created_at: "2024-04-07T20:00:00.000Z"
+    created_at: "2026-01-07T20:00:00.000Z"
   }
 ];
 
