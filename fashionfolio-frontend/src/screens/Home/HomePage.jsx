@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -49,7 +47,13 @@ const TEXT_SECONDARY = "#6B7280";
 const TEXT_DARK = "#4b5563";
 const BORDER = "#E5E7EB";
 
-const OUTFIT_CARD_COLORS = ["#e8ddd0", "#d9cebe", "#cabdb1", "#c4b5a5", "#bfb0a0"];
+const OUTFIT_CARD_COLORS = [
+  "#e8ddd0",
+  "#d9cebe",
+  "#cabdb1",
+  "#c4b5a5",
+  "#bfb0a0",
+];
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -112,9 +116,16 @@ export default function HomePage() {
   const outfitCards =
     clothingItems.length > 0
       ? clothingItems.slice(0, 5)
-      : [1, 2, 3, 4].map((i) => ({ id: i, name: `Look ${i}`, image_url: undefined }));
+      : [1, 2, 3, 4].map((i) => ({
+          id: i,
+          name: `Look ${i}`,
+          image_url: undefined,
+        }));
 
-  const totalWorn = clothingItems.reduce((s, it) => s + (it.times_worn ?? 0), 0);
+  const totalWorn = clothingItems.reduce(
+    (s, it) => s + (it.times_worn ?? 0),
+    0,
+  );
   const stylesCount = user?.style_preferences?.length ?? 2;
 
   return (
@@ -182,7 +193,9 @@ export default function HomePage() {
               <Text style={styles.pillText}>Régénérer</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.sectionSub}>Sélectionné pour vous par l'IA</Text>
+          <Text style={styles.sectionSub}>
+            Sélectionné pour vous par FashionFolio
+          </Text>
 
           {/* Carrousel horizontal */}
           <ScrollView
@@ -196,10 +209,15 @@ export default function HomePage() {
                 key={item.id}
                 style={[
                   styles.outfitCard,
-                  { backgroundColor: OUTFIT_CARD_COLORS[idx % OUTFIT_CARD_COLORS.length] },
+                  {
+                    backgroundColor:
+                      OUTFIT_CARD_COLORS[idx % OUTFIT_CARD_COLORS.length],
+                  },
                 ]}
                 onPress={() =>
-                  clothingItems.length > 0 ? navigation.navigate("Dressing") : undefined
+                  clothingItems.length > 0
+                    ? navigation.navigate("Dressing")
+                    : undefined
                 }
                 activeOpacity={0.9}
               >
@@ -252,7 +270,9 @@ export default function HomePage() {
 
         {/* ── 5. Actions rapides ───────────────────────────────────── */}
         <View>
-          <Text style={[styles.sectionTitle, { marginBottom: 12 }]}>Actions rapides</Text>
+          <Text style={[styles.sectionTitle, { marginBottom: 12 }]}>
+            Actions rapides
+          </Text>
           <View style={styles.actionsGrid}>
             <TouchableOpacity
               style={styles.actionCard}
