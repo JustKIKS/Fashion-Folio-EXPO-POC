@@ -2,45 +2,11 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import { ArrowLeft, Search, MessageCircle } from 'lucide-react-native';
-
-const fakeConversations = [
-    {
-        id: "fake-1",
-        participant_name: "Sophie Martin",
-        participant_avatar: "https://i.pravatar.cc/150?img=1",
-        last_message: "J'adore ton dernier look ! 😍",
-        last_message_date: new Date(Date.now() - 300000).toISOString(),
-        unread_count: 2
-    },
-    {
-        id: "fake-2",
-        participant_name: "Thomas Dubois",
-        participant_avatar: "https://i.pravatar.cc/150?img=12",
-        last_message: "Tu as acheté où ce manteau ?",
-        last_message_date: new Date(Date.now() - 3600000).toISOString(),
-        unread_count: 0
-    },
-    {
-        id: "fake-3",
-        participant_name: "Emma Laurent",
-        participant_avatar: "https://i.pravatar.cc/150?img=5",
-        last_message: "Merci pour les conseils ! 🙏",
-        last_message_date: new Date(Date.now() - 7200000).toISOString(),
-        unread_count: 1
-    },
-    {
-        id: "fake-4",
-        participant_name: "Lucas Bernard",
-        participant_avatar: "https://i.pravatar.cc/150?img=14",
-        last_message: "Super tenue pour l'événement 👌",
-        last_message_date: new Date(Date.now() - 86400000).toISOString(),
-        unread_count: 0
-    }
-];
+import { FAKE_CONVERSATIONS } from '../../services/mock';
 
 export default function DMListScreen() {
     const navigation = useNavigation();
-    const [conversations] = useState(fakeConversations);
+    const [conversations, setConversations] = useState(FAKE_CONVERSATIONS);
 
     const getTimeAgo = (dateString) => {
         const date = new Date(dateString);
@@ -69,24 +35,38 @@ export default function DMListScreen() {
             </View>
 
         {/* Liste des conversations */}
-        <FlatList
-            data={conversations}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-                <TouchableOpacity
-                    style={styles.convCard}
-                    onPress={() => navigation.navigate('DMConversation', { conversation: item })}
-                >
-            {/* Avatar */}
-            <View style={styles.avatarContainer}>
-                <Image source={{ uri: item.participant_avatar }} style={styles.avatar} />
-                {item.unread_count > 0 && (
-                <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{item.unread_count}</Text>
-                        </View>
-                )}
+        {conversations.length === 0 ? (
+            <View style={styles.emptyContainer}>
+                <MessageCircle color="#909090" size={48} />
+                <Text style={styles.emptyTitle}>Aucun message</Text>
+                <Text style={styles.emptySubtitle}>Vos conversations apparaîtront ici</Text>
             </View>
+        ) : (
+            <FlatList
+                data={conversations}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.listContainer}
+                renderItem={({ item }) => (
+            <TouchableOpacity
+                style={styles.convCard}
+                onPress={() => {
+                setConversations(prev =>
+                    prev.map(conv =>
+                    conv.id === item.id ? { ...conv, unread_count: 0 } : conv
+                    )
+                );
+                navigation.navigate('DMConversation', { conversation: item });
+                }}
+            >
+                {/* Avatar */}
+                <View style={styles.avatarContainer}>
+                    <Image source={{ uri: item.participant_avatar }} style={styles.avatar} />
+                    {item.unread_count > 0 && (
+                        <View style={styles.badge}>
+                            <Text style={styles.badgeText}>{item.unread_count}</Text>
+                        </View>
+                    )}
+                </View>
 
             {/* Contenu */}
             <View style={styles.convContent}>
@@ -94,17 +74,18 @@ export default function DMListScreen() {
                     <Text style={styles.convName}>{item.participant_name}</Text>
                     <Text style={styles.convTime}>{getTimeAgo(item.last_message_date)}</Text>
                 </View>
-                <Text
-                    style={[styles.convMessage, item.unread_count > 0 && styles.convMessageUnread]}
-                    numberOfLines={1}
-                >
+                    <Text
+                        style={[styles.convMessage, item.unread_count > 0 && styles.convMessageUnread]}
+                        numberOfLines={1}
+                    >
                     {item.last_message}
-                </Text>
-            </View>
+                    </Text>
+                </View>
             </TouchableOpacity>
+            )}
+            />
         )}
-        />
-        </View>
+    </View>
     );
 }
 
@@ -128,9 +109,24 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#1C0256',
     },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 12,
+    },
+    emptyTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#1C0256',
+    },
+    emptySubtitle: {
+        fontSize: 14,
+        color: '#909090',
+        textAlign: 'center',
+    },
     listContainer: {
         padding: 16,
-        gap: 8,
     },
     convCard: {
         flexDirection: 'row',
