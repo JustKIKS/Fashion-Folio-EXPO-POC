@@ -58,6 +58,9 @@ const getTimeAgo = (dateString) => {
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [likedPosts, setLikedPosts] = useState(new Set());
+  const [likeCounts, setLikeCounts] = useState(
+    Object.fromEntries(MOCK_POSTS.map(post => [post.id, post.likes_count]))
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
@@ -68,17 +71,19 @@ useFocusEffect(
     setTotalUnread(total);
   }, [])
 );
-  const handleLike = (postId) => {
-    setLikedPosts(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(postId)) {
-        newSet.delete(postId);
-      } else {
-        newSet.add(postId);
-      }
-      return newSet;
-    });
-  };
+const handleLike = (postId) => {
+  setLikedPosts(prev => {
+    const newSet = new Set(prev);
+    if (newSet.has(postId)) {
+      newSet.delete(postId);
+      setLikeCounts(counts => ({ ...counts, [postId]: counts[postId] - 1 }));
+    } else {
+      newSet.add(postId);
+      setLikeCounts(counts => ({ ...counts, [postId]: counts[postId] + 1 }));
+    }
+    return newSet;
+  });
+};
 
   const filteredPosts = MOCK_POSTS.filter(post =>
     post.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -158,8 +163,7 @@ useFocusEffect(
             </View>
 
             {/* Likes et caption */}
-            <Text style={styles.likes}>{item.likes_count} j'aime</Text>
-            <Text style={styles.caption}>
+            <Text style={styles.likes}>{likeCounts[item.id]} j'aime</Text>            <Text style={styles.caption}>
               <Text style={styles.username}>{item.username} </Text>
               {item.caption}
             </Text>
