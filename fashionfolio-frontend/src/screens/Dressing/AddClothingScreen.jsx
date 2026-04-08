@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { Camera, ArrowLeft, Sparkles, X } from "lucide-react-native";
+import { Camera, ArrowLeft } from "lucide-react-native";
 
 const categories = [
   "haut",
@@ -24,16 +24,6 @@ const categories = [
   "chaussures",
   "accessoire",
   "sac",
-];
-const stylesList = [
-  "casual",
-  "chic",
-  "streetwear",
-  "boheme",
-  "classique",
-  "sportif",
-  "elegant",
-  "vintage",
 ];
 const seasons = ["printemps", "ete", "automne", "hiver"];
 const colors = [
@@ -57,16 +47,14 @@ export default function AddClothingScreen() {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    type: "", // On utilise 'type' pour correspondre à ton backend
+    type: "",
     category: "",
     brand: "",
     color: "",
-    style: "",
     season: "",
     photo_url: null,
   });
 
-  // Fonction pour choisir une image
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -77,8 +65,6 @@ export default function AddClothingScreen() {
 
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
-      // Ici, tu pourrais uploader l'image vers Cloudinary ou S3
-      // pour avoir une vraie photo_url. Pour l'instant on garde l'URI locale.
       setFormData({ ...formData, photo_url: result.assets[0].uri });
     }
   };
@@ -91,24 +77,28 @@ export default function AddClothingScreen() {
   };
 
   const handleSubmit = async () => {
-    if (!formData.type || !formData.category) {
-      Alert.alert("Erreur", "Le nom (type) et la catégorie sont obligatoires.");
+    if (!formData.category) {
+      Alert.alert("Erreur", "Tu dois choisir une catégorie (Haut, Bas...)");
       return;
     }
 
     setLoading(true);
     try {
-      // APPEL À TON BACKEND FASTAPI
       const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // N'oublie pas le Token si la route est protégée !
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTcyODA5fQ.pGV_QeWNojtLluFF58p59Dchi4Yi96g3AVvK6arItZU`,
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NjU1NjQwfQ.ouO9t_6sZW3RMotQYqc3BcAoLWifclmSLszELU1qWI0",
         },
         body: JSON.stringify({
-          ...formData,
-          user_id: 1, // ID temporaire
+          type: formData.type,
+          brand: formData.brand || "Sans marque",
+          style: formData.category.toLowerCase(),
+          color: formData.color || "N/A",
+          pattern: "uni",
+          season: formData.season || "toute",
+          photo_url: formData.photo_url,
         }),
       });
 
@@ -116,11 +106,10 @@ export default function AddClothingScreen() {
         Alert.alert("Succès", "Vêtement ajouté !");
         navigation.goBack();
       } else {
-        const errorData = await response.json();
-        Alert.alert("Erreur", JSON.stringify(errorData.detail));
+        Alert.alert("Erreur", "Impossible d'ajouter le vêtement.");
       }
     } catch (error) {
-      Alert.alert("Erreur", "Impossible de contacter le serveur.");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -128,7 +117,6 @@ export default function AddClothingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -143,7 +131,6 @@ export default function AddClothingScreen() {
         style={styles.formContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Upload Box */}
         <TouchableOpacity style={styles.uploadBox} onPress={pickImage}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.previewImage} />
@@ -155,7 +142,6 @@ export default function AddClothingScreen() {
           )}
         </TouchableOpacity>
 
-        {/* Form Inputs */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nom de l'article (ex: T-shirt) *</Text>
           <TextInput
@@ -173,7 +159,6 @@ export default function AddClothingScreen() {
             placeholder="Ex: Zara, Levi's..."
           />
 
-          {/* SÉLECTEURS CHIPS (Catégorie) */}
           <Text style={styles.label}>Catégorie *</Text>
           <View style={styles.chipGroup}>
             {categories.map((cat) => (
@@ -197,7 +182,6 @@ export default function AddClothingScreen() {
             ))}
           </View>
 
-          {/* COULEURS */}
           <Text style={styles.label}>Couleur</Text>
           <View style={styles.chipGroup}>
             {colors.map((c) => (
@@ -218,7 +202,6 @@ export default function AddClothingScreen() {
             ))}
           </View>
 
-          {/* SAISONS */}
           <Text style={styles.label}>Saison</Text>
           <View style={styles.chipGroup}>
             {seasons.map((s) => (
@@ -243,7 +226,6 @@ export default function AddClothingScreen() {
           </View>
         </View>
 
-        {/* Submit Buttons */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.btnCancel}
@@ -315,6 +297,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     fontSize: 16,
     color: "#1C0256",
+  },
+  inputGroup: {
+    marginBottom: 20,
   },
   chipGroup: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"; // Fusionné ici
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native"; // Ajouté ici
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Search, Plus } from "lucide-react-native";
 
 const categories = [
@@ -31,12 +31,15 @@ export default function DressingScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  // RECHARGEMENT AUTOMATIQUE QUAND ON REVIENT SUR L'ÉCRAN
   useFocusEffect(
     useCallback(() => {
       loadItems();
     }, []),
   );
+
+  useEffect(() => {
+    filterItems();
+  }, [selectedCategory, searchQuery, clothingItems]);
 
   const loadItems = async () => {
     try {
@@ -44,39 +47,41 @@ export default function DressingScreen() {
         method: "GET",
         headers: {
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTY5NDM1fQ.wlAzIlrcx-yvm5EdquF11oHbGuq1tkQE8bOzwHDz9Eo",
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTczOTkzfQ.i6pdBckA-IkqcSPnPiv5wKafjGalJxk1MKDzkjV8fNU",
           "Content-Type": "application/json",
         },
       });
       const data = await response.json();
-
       if (Array.isArray(data)) {
         setClothingItems(data);
-        setFilteredItems(data);
       }
     } catch (error) {
-      console.error("Erreur réseau :", error);
+      console.error("Erreur chargement :", error);
     } finally {
       setLoading(false);
     }
   };
 
   const filterItems = () => {
-    const baseItems = Array.isArray(clothingItems) ? clothingItems : [];
-    let filtered = [...baseItems];
+    let filtered = [...clothingItems];
 
+    // Filtre par catégorie
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(
-        (item) => item.type?.toLowerCase() === selectedCategory.toLowerCase(),
-      );
+      filtered = filtered.filter((item) => {
+        const cat = (item.style || "").toLowerCase().trim();
+        return cat === selectedCategory.toLowerCase();
+      });
     }
+
     if (searchQuery) {
+      const search = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(
         (item) =>
-          item.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.brand?.toLowerCase().includes(searchQuery.toLowerCase()),
+          (item.type && item.type.toLowerCase().includes(search)) ||
+          (item.brand && item.brand.toLowerCase().includes(search)),
       );
     }
+
     setFilteredItems(filtered);
   };
 
@@ -94,12 +99,18 @@ export default function DressingScreen() {
           </View>
         )}
       </View>
+
       <View style={styles.cardInfo}>
+        {/* LIGNE 1 : NOM • MARQUE */}
         <Text style={styles.itemName} numberOfLines={1}>
-          {item.type}
+          {item.type}{" "}
+          {item.brand && item.brand !== "Sans marque" ? `• ${item.brand}` : ""}
         </Text>
+
         <Text style={styles.itemBrand} numberOfLines={1}>
-          {item.brand || "Inconnu"}
+          {item.style
+            ? item.style.charAt(0).toUpperCase() + item.style.slice(1)
+            : ""}
         </Text>
       </View>
     </TouchableOpacity>
@@ -107,12 +118,12 @@ export default function DressingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Mon Dressing</Text>
           <Text style={styles.headerSubtitle}>
-            {filteredItems.length}{" "}
-            {filteredItems.length > 1 ? "articles" : "article"}
+            {filteredItems.length} article{filteredItems.length > 1 ? "s" : ""}
           </Text>
         </View>
         <TouchableOpacity
@@ -123,18 +134,20 @@ export default function DressingScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Recherche */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
-          <Search color="#909090" size={18} style={styles.searchIcon} />
+          <Search color="#909090" size={18} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Rechercher..."
+            placeholder="Rechercher une marque ou un vêtement..."
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
       </View>
 
+      {/* Filtres (ScrollView) */}
       <View style={{ height: 50, marginBottom: 10 }}>
         <ScrollView
           horizontal
@@ -148,7 +161,7 @@ export default function DressingScreen() {
                 styles.categoryChip,
                 selectedCategory === cat.id && styles.categoryChipActive,
               ]}
-              onPress={() => setSelectedCategory(cat.id)}
+              onPress={() => setSelectedCategory(cat.id)} // ICI ON CHANGE L'ÉTAT
             >
               <Text
                 style={[
@@ -163,6 +176,7 @@ export default function DressingScreen() {
         </ScrollView>
       </View>
 
+      {/* Grille */}
       {loading ? (
         <ActivityIndicator
           size="large"
@@ -171,7 +185,7 @@ export default function DressingScreen() {
         />
       ) : (
         <FlatList
-          data={filteredItems}
+          data={filteredItems} // ON UTILISE BIEN LA LISTE FILTRÉE
           renderItem={renderClothingCard}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
@@ -182,7 +196,7 @@ export default function DressingScreen() {
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>Ton dressing est vide !</Text>
+              <Text style={styles.emptyText}>Aucun vêtement trouvé.</Text>
             </View>
           }
         />
@@ -218,8 +232,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     height: 50,
   },
-  searchIcon: { marginRight: 10 },
-  searchInput: { flex: 1, color: "#1C0256" },
+  searchInput: { flex: 1, color: "#1C0256", marginLeft: 10 },
   categoryChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -227,6 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F2F7",
     marginRight: 8,
     height: 35,
+    justifyContent: "center",
   },
   categoryChipActive: { backgroundColor: "#1C0256" },
   categoryText: { color: "#1C0256", fontWeight: "600" },
@@ -246,6 +260,10 @@ const styles = StyleSheet.create({
   cardInfo: { padding: 10 },
   itemName: { fontSize: 14, fontWeight: "bold", color: "#1C0256" },
   itemBrand: { fontSize: 12, color: "#909090" },
-  emptyContainer: { alignItems: "center", marginTop: 50 },
-  emptyText: { color: "#909090" },
+  emptyContainer: {
+    alignItems: "center",
+    marginTop: 50,
+    paddingHorizontal: 40,
+  },
+  emptyText: { color: "#909090", textAlign: "center" },
 });
