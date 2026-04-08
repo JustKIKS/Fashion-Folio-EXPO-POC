@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native';
 import { Heart, MessageCircle, Send, Search } from 'lucide-react-native';
+import { FAKE_CONVERSATIONS } from '../../services/mock';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const MOCK_POSTS = [
   {
@@ -58,6 +61,13 @@ export default function FeedScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
+const [totalUnread, setTotalUnread] = useState(0);
+useFocusEffect(
+  useCallback(() => {
+    const total = FAKE_CONVERSATIONS.reduce((sum, conv) => sum + (conv.unread_count || 0), 0);
+    setTotalUnread(total);
+  }, [])
+);
   const handleLike = (postId) => {
     setLikedPosts(prev => {
       const newSet = new Set(prev);
@@ -86,7 +96,14 @@ export default function FeedScreen() {
             <Search color="#1C0256" size={24} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('DMList')}>
-            <MessageCircle color="#1C0256" size={24} />
+            <View>
+              <MessageCircle color="#1C0256" size={24} />
+              {totalUnread > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{totalUnread}</Text>
+                </View>
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -185,6 +202,37 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: 'row',
     gap: 12,
+    alignItems: 'center',
+  },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  searchInput: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#1C0256',
   },
   searchContainer: {
     paddingHorizontal: 16,
