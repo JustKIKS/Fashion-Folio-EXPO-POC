@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native';
-import { Heart, MessageCircle, Send, Search } from 'lucide-react-native';
+import { Heart, MessageCircle, Send, Search, X } from 'lucide-react-native';
 import { FAKE_CONVERSATIONS } from '../../services/mock';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
@@ -16,7 +16,12 @@ const MOCK_POSTS = [
     likes_count: 42,
     comments_count: 5,
     tags: ["casual", "summer"],
-    created_at: "2026-04-08T10:30:00.000Z"
+    created_at: "2026-04-08T10:30:00.000Z",
+    comments: [
+      { id: "1", username: "luka_broubrou", text: "Trop beau ce look ! 🔥" },
+      { id: "2", username: "max_gogo", text: "J'adore la couleur ✨" },
+      { id: "3", username: "emma_l", text: "Tu es trop stylée 😍" }
+]
   },
   {
     id: "2",
@@ -27,7 +32,12 @@ const MOCK_POSTS = [
     likes_count: 30,
     comments_count: 2,
     tags: ["elegant", "spring"],
-    created_at: "2026-03-08T08:15:00.000Z"
+    created_at: "2026-03-08T08:15:00.000Z",
+    comments: [
+      { id: "1", username: "sophie_m", text: "Parfait pour une soirée 👌" },
+      { id: "2", username: "max_gogo", text: "Ce manteau est incroyable !" },
+      { id: "3", username: "emma_l", text: "Tu assures 🙌" }
+]
   },
   {
     id: "3",
@@ -38,7 +48,12 @@ const MOCK_POSTS = [
     likes_count: 50,
     comments_count: 15,
     tags: ["streetwear", "spring"],
-    created_at: "2026-01-07T20:00:00.000Z"
+    created_at: "2026-01-07T20:00:00.000Z",
+    comments: [
+      { id: "1", username: "sophie_m", text: "Belle pièce ! 😍" },
+      { id: "2", username: "luka_broubrou", text: "Le streetwear c'est la vie 🤙" },
+      { id: "3", username: "emma_l", text: "Trop cool ce style ✨" }
+]
   }
 ];
 
@@ -63,6 +78,11 @@ export default function FeedScreen() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [commentInput, setCommentInput] = useState("");
+  const [postComments, setPostComments] = useState( 
+    Object.fromEntries(MOCK_POSTS.map(post => [post.id, post.comments]))
+  );
 
 const [totalUnread, setTotalUnread] = useState(0);
 useFocusEffect(
@@ -83,6 +103,20 @@ const handleLike = (postId) => {
     }
     return newSet;
   });
+};
+
+const handleAddComment = (postId) => {
+  if (!commentInput.trim()) return;
+  const newComment = {
+    id: String(Date.now()),
+    username: "moi",
+    text: commentInput.trim()
+  };
+  setPostComments(prev => ({
+    ...prev,
+    [postId]: [...(prev[postId] || []), newComment]
+  }));
+  setCommentInput("");
 };
 
   const filteredPosts = MOCK_POSTS.filter(post =>
@@ -141,6 +175,47 @@ const handleLike = (postId) => {
                 <Text style={styles.timeAgo}>{getTimeAgo(item.created_at)}</Text>
               </View>
             </View>
+
+            {/* Modal commentaires */}
+            {selectedPost && (
+            <View style={styles.modalOverlay}>
+                <View style={styles.modalContainer}>
+                  {/* Header modal */}
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Commentaires</Text>
+                    <TouchableOpacity onPress={() => setSelectedPost(null)}>
+                        <X color="#1C0256" size={24} />
+                    </TouchableOpacity>
+                  </View>
+
+            {/* Liste commentaires */}
+            <FlatList
+              data={postComments[selectedPost]}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.commentItem}>
+                  <Text style={styles.commentUsername}>{item.username} </Text>
+                  <Text style={styles.commentText}>{item.text}</Text>
+                </View>
+              )}
+            />
+
+            {/* Input commentaire */}
+            <View style={styles.commentInputContainer}>
+              <TextInput
+                style={styles.commentInput}
+                value={commentInput}
+                onChangeText={setCommentInput}
+                placeholder="Ajouter un commentaire..."
+                placeholderTextColor="#909090"
+              />
+              <TouchableOpacity onPress={() => handleAddComment(selectedPost)}>
+                <Send color="#4A26D0" size={24} />
+            </TouchableOpacity>
+          </View>
+    </View>
+  </View>
+)}
 
             {/* Image du post */}
             <Image source={{ uri: item.image_url }} style={styles.postImage} />
@@ -309,4 +384,61 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
+  modalOverlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0,0,0,0.5)',
+  justifyContent: 'flex-end',
+},
+modalContainer: {
+  backgroundColor: '#fff',
+  borderTopLeftRadius: 24,
+  borderTopRightRadius: 24,
+  padding: 20,
+  maxHeight: '60%',
+},
+modalHeader: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: 16,
+},
+modalTitle: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: '#1C0256',
+},
+commentItem: {
+  flexDirection: 'row',
+  marginBottom: 12,
+},
+commentUsername: {
+  fontWeight: '600',
+  color: '#1C0256',
+},
+commentText: {
+  color: '#1C0256',
+  flex: 1,
+},
+commentInputContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  borderTopWidth: 1,
+  borderTopColor: '#f0f0f0',
+  paddingTop: 12,
+  marginTop: 12,
+  gap: 10,
+},
+commentInput: {
+  flex: 1,
+  backgroundColor: '#f5f5f5',
+  borderRadius: 24,
+  paddingHorizontal: 16,
+  paddingVertical: 10,
+  fontSize: 14,
+  color: '#1C0256',
+},
 });
