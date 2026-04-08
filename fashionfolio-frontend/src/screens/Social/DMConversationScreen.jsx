@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View, Text, StyleSheet, TouchableOpacity,
     TextInput, FlatList, KeyboardAvoidingView, Platform
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeft, Send } from 'lucide-react-native';
+import { markAsRead } from '../../services/mock';
 
 const MOCK_MESSAGES_BY_CONVERSATION = {
     "fake-1": [
@@ -38,6 +39,12 @@ export default function DMConversationScreen() {
     );
     const [input, setInput] = useState("");
     const flatListRef = useRef(null);
+
+    useEffect(() => {
+        if (conversation?.id) {
+        markAsRead(conversation.id);
+        }
+    }, []);
 
     const handleSend = () => {
         if (!input.trim()) return;
