@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native';
 import { Heart, MessageCircle, Send, Search } from 'lucide-react-native';
 
 const MOCK_POSTS = [
@@ -13,7 +13,7 @@ const MOCK_POSTS = [
     likes_count: 42,
     comments_count: 5,
     tags: ["casual", "summer"],
-    created_at: "2026-04-07T10:30:00.000Z"
+    created_at: "2024-04-08T10:30:00.000Z"
   },
   {
     id: "2",
@@ -24,7 +24,7 @@ const MOCK_POSTS = [
     likes_count: 30,
     comments_count: 2,
     tags: ["elegant", "spring"],
-    created_at: "2026-03-08T08:15:00.000Z"
+    created_at: "2024-04-08T08:15:00.000Z"
   },
   {
     id: "3",
@@ -35,7 +35,7 @@ const MOCK_POSTS = [
     likes_count: 50,
     comments_count: 15,
     tags: ["streetwear", "spring"],
-    created_at: "2026-01-09T20:00:00.000Z"
+    created_at: "2024-04-07T20:00:00.000Z"
   }
 ];
 
@@ -55,6 +55,8 @@ const getTimeAgo = (dateString) => {
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [likedPosts, setLikedPosts] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
 
   const handleLike = (postId) => {
     setLikedPosts(prev => {
@@ -68,13 +70,19 @@ export default function FeedScreen() {
     });
   };
 
+  const filteredPosts = MOCK_POSTS.filter(post =>
+    post.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.caption.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Social Place</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
             <Search color="#1C0256" size={24} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('DMList')}>
@@ -83,9 +91,23 @@ export default function FeedScreen() {
         </View>
       </View>
 
+      {/* Barre de recherche */}
+      {showSearch && (
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Rechercher un post, utilisateur..."
+            placeholderTextColor="#909090"
+            autoFocus
+          />
+        </View>
+      )}
+
       {/* Feed */}
       <FlatList
-        data={MOCK_POSTS}
+        data={filteredPosts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.postCard}>
@@ -163,6 +185,20 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: 'row',
     gap: 12,
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  searchInput: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#1C0256',
   },
   postCard: {
     marginHorizontal: 16,
