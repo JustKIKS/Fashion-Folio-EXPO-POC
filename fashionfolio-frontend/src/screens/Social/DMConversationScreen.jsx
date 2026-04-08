@@ -6,18 +6,36 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeft, Send } from 'lucide-react-native';
 
-const MOCK_MESSAGES = [
-    { id: "1", sender: "other", content: "Salut ! J'adore ton dernier look 😍", created_at: "2024-04-08T10:00:00.000Z" },
-    { id: "2", sender: "me", content: "Merci beaucoup !", created_at: "2024-04-08T10:01:00.000Z" },
-    { id: "3", sender: "other", content: "Tu l'as acheté où ?", created_at: "2024-04-08T10:02:00.000Z" },
-    { id: "4", sender: "me", content: "Sur Zara, ils ont de super pièces en ce moment 🙌", created_at: "2024-04-08T10:03:00.000Z" },
-];
+const MOCK_MESSAGES_BY_CONVERSATION = {
+    "fake-1": [
+        { id: "1", sender: "other", content: "Salut ! J'adore ton dernier look 😍", created_at: "2024-04-08T10:00:00.000Z" },
+        { id: "2", sender: "me", content: "Merci beaucoup !", created_at: "2024-04-08T10:01:00.000Z" },
+        { id: "3", sender: "other", content: "Tu as un super style ✨", created_at: "2024-04-08T10:02:00.000Z" },
+    ],
+    "fake-2": [
+        { id: "1", sender: "other", content: "Tu as acheté où ce manteau ?", created_at: "2024-04-08T08:00:00.000Z" },
+        { id: "2", sender: "me", content: "Sur Zara ! Ils ont de super pièces en ce moment 🙌", created_at: "2024-04-08T08:01:00.000Z" },
+        { id: "3", sender: "other", content: "Merci je vais regarder !", created_at: "2024-04-08T08:02:00.000Z" },
+    ],
+    "fake-3": [
+        { id: "1", sender: "me", content: "Contente que les conseils t'aient aidé !", created_at: "2024-04-08T07:00:00.000Z" },
+        { id: "2", sender: "other", content: "Merci pour les conseils ! 🙏", created_at: "2024-04-08T07:01:00.000Z" },
+        { id: "3", sender: "other", content: "Tu es trop gentille 🥰", created_at: "2024-04-08T07:02:00.000Z" },
+    ],
+    "fake-4": [
+        { id: "1", sender: "other", content: "Super tenue pour l'événement 👌", created_at: "2024-04-07T20:00:00.000Z" },
+        { id: "2", sender: "me", content: "Merci ! J'avais hésité longtemps 😅", created_at: "2024-04-07T20:01:00.000Z" },
+        { id: "3", sender: "other", content: "Tu avais bien fait de choisir celle-là !", created_at: "2024-04-07T20:02:00.000Z" },
+    ],
+};
 
 export default function DMConversationScreen() {
     const navigation = useNavigation();
     const route = useRoute();
     const conversation = route.params?.conversation;
-    const [messages, setMessages] = useState(MOCK_MESSAGES);
+    const [messages, setMessages] = useState(
+        MOCK_MESSAGES_BY_CONVERSATION[conversation?.id] || []
+    );
     const [input, setInput] = useState("");
     const flatListRef = useRef(null);
 
