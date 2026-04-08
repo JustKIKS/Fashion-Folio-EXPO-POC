@@ -3,6 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native';
 import { Heart, MessageCircle, Send, Search } from 'lucide-react-native';
 import { FAKE_CONVERSATIONS } from '../../services/mock';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const MOCK_POSTS = [
   {
@@ -59,8 +61,13 @@ export default function FeedScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
-  const totalUnread = FAKE_CONVERSATIONS.reduce((sum, conv) => sum + (conv.unread_count || 0), 0);
-
+const [totalUnread, setTotalUnread] = useState(0);
+useFocusEffect(
+  useCallback(() => {
+    const total = FAKE_CONVERSATIONS.reduce((sum, conv) => sum + (conv.unread_count || 0), 0);
+    setTotalUnread(total);
+  }, [])
+);
   const handleLike = (postId) => {
     setLikedPosts(prev => {
       const newSet = new Set(prev);
