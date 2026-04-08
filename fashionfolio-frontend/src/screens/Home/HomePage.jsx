@@ -1,7 +1,4 @@
-/**
- * HomeScreen — React Native
- * Design Figma : https://www.figma.com/design/CnXrV7f8jFP5PufoXs8UJE/FashionFolio-Mobile—UI-Proposals?node-id=7-5
- */
+
 
 import React, { useEffect, useState } from "react";
 import {
@@ -31,7 +28,7 @@ import {
 
 async function fetchCurrentUser() {
   return {
-    full_name: "Alex Dupont",
+    full_name: "User Example",
     onboarding_completed: true,
     style_preferences: ["casual", "chic"],
   };
