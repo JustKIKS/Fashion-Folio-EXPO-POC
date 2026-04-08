@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native';
 import { Heart, MessageCircle, Send, Search } from 'lucide-react-native';
+import { FAKE_CONVERSATIONS } from '../../services/mock';
 
 const MOCK_POSTS = [
   {
@@ -13,7 +14,7 @@ const MOCK_POSTS = [
     likes_count: 42,
     comments_count: 5,
     tags: ["casual", "summer"],
-    created_at: "2026-04-08T10:30:00.000Z"
+    created_at: "2024-04-08T10:30:00.000Z"
   },
   {
     id: "2",
@@ -24,7 +25,7 @@ const MOCK_POSTS = [
     likes_count: 30,
     comments_count: 2,
     tags: ["elegant", "spring"],
-    created_at: "2026-03-08T08:15:00.000Z"
+    created_at: "2024-04-08T08:15:00.000Z"
   },
   {
     id: "3",
@@ -35,7 +36,7 @@ const MOCK_POSTS = [
     likes_count: 50,
     comments_count: 15,
     tags: ["streetwear", "spring"],
-    created_at: "2026-01-07T20:00:00.000Z"
+    created_at: "2024-04-07T20:00:00.000Z"
   }
 ];
 
@@ -57,6 +58,8 @@ export default function FeedScreen() {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+
+  const totalUnread = FAKE_CONVERSATIONS.reduce((sum, conv) => sum + (conv.unread_count || 0), 0);
 
   const handleLike = (postId) => {
     setLikedPosts(prev => {
@@ -86,7 +89,14 @@ export default function FeedScreen() {
             <Search color="#1C0256" size={24} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('DMList')}>
-            <MessageCircle color="#1C0256" size={24} />
+            <View>
+              <MessageCircle color="#1C0256" size={24} />
+              {totalUnread > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{totalUnread}</Text>
+                </View>
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -185,6 +195,23 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: 'row',
     gap: 12,
+    alignItems: 'center',
+  },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
   searchContainer: {
     paddingHorizontal: 16,

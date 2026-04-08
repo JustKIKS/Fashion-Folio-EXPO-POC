@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import { ArrowLeft, Search, MessageCircle } from 'lucide-react-native';
+import { FAKE_CONVERSATIONS } from '../../services/mock';
 
 const fakeConversations = [
     {
@@ -40,8 +41,7 @@ const fakeConversations = [
 
 export default function DMListScreen() {
     const navigation = useNavigation();
-    const [conversations] = useState(fakeConversations);
-
+    const [conversations] = useState(FAKE_CONVERSATIONS);
     const getTimeAgo = (dateString) => {
         const date = new Date(dateString);
         const now = new Date();
