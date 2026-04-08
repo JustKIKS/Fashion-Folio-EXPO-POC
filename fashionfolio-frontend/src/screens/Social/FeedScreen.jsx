@@ -7,40 +7,54 @@ const MOCK_POSTS = [
   {
     id: "1",
     username: "sophie_m",
-    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    image_url: "https://images.unsplash.com/photo-1687825519599-8724ef446d7d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=764",
+    image_url: "https://images.unsplash.com/photo-1687825519599-8724ef446d7d?q=80&w=1974",
     caption: "Look du jour ✨",
     likes_count: 42,
     comments_count: 5,
-    tags: ["casual", "summer"]
+    tags: ["casual", "summer"],
+    created_at: "2024-04-08T10:30:00.000Z"
   },
   {
     id: "2",
     username: "luka_broubrou",
-    avatar: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    image_url: "https://plus.unsplash.com/premium_photo-1769290472469-a8a7aa929fc9?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    avatar: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070",
+    image_url: "https://plus.unsplash.com/premium_photo-1769290472469-a8a7aa929fc9?q=80&w=1974",
     caption: "Ma tenue pour la soirée 🔥",
     likes_count: 30,
     comments_count: 2,
-    tags: ["elegant", "spring"]
+    tags: ["elegant", "spring"],
+    created_at: "2024-04-08T08:15:00.000Z"
   },
   {
     id: "3",
     username: "max_gogo",
-    avatar: "https://images.unsplash.com/photo-1625181796571-7f0d4571ab12?q=80&w=702&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    image_url: "https://plus.unsplash.com/premium_photo-1688497831535-120bd47d9f9c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    avatar: "https://images.unsplash.com/photo-1625181796571-7f0d4571ab12?q=80&w=702",
+    image_url: "https://plus.unsplash.com/premium_photo-1688497831535-120bd47d9f9c?q=80&w=1974",
     caption: "Nouvelle pièce dans mon dressing 👗",
     likes_count: 50,
     comments_count: 15,
-    tags: ["streetwear", "spring"]
+    tags: ["streetwear", "spring"],
+    created_at: "2024-04-07T20:00:00.000Z"
   }
 ];
 
+const getTimeAgo = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now - date;
+  const diffInMins = Math.floor(diffInMs / 60000);
+  const diffInHours = Math.floor(diffInMs / 3600000);
+  const diffInDays = Math.floor(diffInMs / 86400000);
+
+  if (diffInMins < 60) return `${diffInMins} min`;
+  if (diffInHours < 24) return `${diffInHours}h`;
+  return `${diffInDays}j`;
+};
 
 export default function FeedScreen() {
   const navigation = useNavigation();
   const [likedPosts, setLikedPosts] = useState(new Set());
-  const [showSearchPanel, setShowSearchPanel] = useState(false);
 
   const handleLike = (postId) => {
     setLikedPosts(prev => {
@@ -60,7 +74,7 @@ export default function FeedScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Social Place</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity onPress={() => setShowSearchPanel(!showSearchPanel)}>
+          <TouchableOpacity>
             <Search color="#1C0256" size={24} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('DMList')}>
@@ -78,7 +92,10 @@ export default function FeedScreen() {
             {/* Header du post */}
             <View style={styles.postHeader}>
               <Image source={{ uri: item.avatar }} style={styles.avatar} />
-              <Text style={styles.username}>{item.username}</Text>
+              <View style={styles.postHeaderText}>
+                <Text style={styles.username}>{item.username}</Text>
+                <Text style={styles.timeAgo}>{getTimeAgo(item.created_at)}</Text>
+              </View>
             </View>
 
             {/* Image du post */}
@@ -162,6 +179,12 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 10,
   },
+  postHeaderText: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   avatar: {
     width: 40,
     height: 40,
@@ -170,6 +193,10 @@ const styles = StyleSheet.create({
   username: {
     fontWeight: '600',
     color: '#1C0256',
+  },
+  timeAgo: {
+    fontSize: 12,
+    color: '#909090',
   },
   postImage: {
     width: '100%',
