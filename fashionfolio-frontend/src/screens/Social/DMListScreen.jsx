@@ -61,7 +61,16 @@ export default function DMListScreen() {
 
     return (
         <View style={styles.container}>
-
+            {/* Header */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <ArrowLeft color="#1C0256" size={24} />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Messages</Text>
+                <TouchableOpacity>
+                    <Search color="#1C0256" size={24} />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
