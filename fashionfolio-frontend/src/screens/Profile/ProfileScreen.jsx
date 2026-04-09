@@ -79,10 +79,6 @@ export default function ProfileScreen() {
         {/* Quick Actions */}
         <View style={styles.actionsGrid}>
           <TouchableOpacity style={styles.actionButton}>
-            <Calendar color="#4A26D0" size={20} />
-            <Text style={styles.actionLabel}>Historique</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
             <TrendingUp color="#4A26D0" size={20} />
             <Text style={styles.actionLabel}>Stats</Text>
           </TouchableOpacity>
@@ -164,7 +160,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   banner: {
-    height: 120,
+    height: 160,
     paddingHorizontal: 20,
     paddingTop: 60,
   },
@@ -177,7 +173,7 @@ const styles = StyleSheet.create({
   profileCard: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
-    marginTop: -40,
+    marginTop: -20,
     borderRadius: 24,
     padding: 20,
     alignItems: 'center',
