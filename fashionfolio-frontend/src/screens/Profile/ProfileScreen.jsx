@@ -85,7 +85,7 @@ export default function ProfileScreen() {
             <Shirt color="#4A26D0" size={20} />
             <Text style={styles.actionLabel}>Dressing</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, styles.premiumButton]}>
+          <TouchableOpacity style={[styles.actionButton, styles.premiumButton]}onPress={() => navigation.navigate('Subscriptions')}>
             <Crown color="#FFD700" size={20} />
             <Text style={[styles.actionLabel, { color: '#1C0256' }]}>Premium</Text>
           </TouchableOpacity>
@@ -102,7 +102,7 @@ export default function ProfileScreen() {
               <Text style={styles.premiumBannerSubtitle}>Tenues illimitées, IA avancée et bien plus</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.premiumBannerButton}>
+          <TouchableOpacity style={styles.premiumBannerButton}onPress={() => navigation.navigate('Subscriptions')}>
             <Text style={styles.premiumBannerButtonText}>Découvrir les offres</Text>
           </TouchableOpacity>
         </View>
@@ -145,12 +145,27 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Déconnexion */}
-      <View style={styles.logoutContainer}>
-        <TouchableOpacity style={styles.logoutButton}>
-          <LogOut color="#FF3B30" size={20} />
-          <Text style={styles.logoutText}>Se déconnecter</Text>
-        </TouchableOpacity>
+{/* Déconnexion */}
+<View style={styles.logoutContainer}>
+  <TouchableOpacity style={styles.logoutButton} onPress={() => {
+    Alert.alert(
+      'Déconnexion',
+      'Êtes-vous sûr de vouloir vous déconnecter ?',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        { text: 'Se déconnecter', style: 'destructive', onPress: async () => {
+          await AsyncStorage.removeItem('token');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          });
+        }}
+      ]
+    );
+  }}>
+    <LogOut color="#FF3B30" size={20} />
+    <Text style={styles.logoutText}>Se déconnecter</Text>
+  </TouchableOpacity>
       </View>
     </ScrollView>
   );
