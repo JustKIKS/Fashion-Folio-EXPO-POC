@@ -14,6 +14,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Camera, ArrowLeft } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const categories = [
   "haut",
@@ -84,12 +85,20 @@ export default function AddClothingScreen() {
 
     setLoading(true);
     try {
+      // 🚨 On récupère le vrai token stocké lors de la connexion
+      const token = await AsyncStorage.getItem("userToken");
+
+      if (!token) {
+        Alert.alert("Erreur", "Vous n'êtes pas connecté.");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NjU1NjQwfQ.ouO9t_6sZW3RMotQYqc3BcAoLWifclmSLszELU1qWI0",
+          Authorization: `Bearer ${token}`, // 🚨 On injecte le vrai token
         },
         body: JSON.stringify({
           type: formData.type,

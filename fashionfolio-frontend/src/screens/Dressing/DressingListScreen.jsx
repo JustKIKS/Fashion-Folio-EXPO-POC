@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Search, Plus } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const categories = [
   { id: "all", label: "Tout" },
@@ -43,17 +44,30 @@ export default function DressingScreen() {
 
   const loadItems = async () => {
     try {
+      // Récupération du token dynamique stocké au login
+      const token = await AsyncStorage.getItem("userToken");
+
+      if (!token) {
+        console.error("Aucun token trouvé");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
         method: "GET",
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTczOTkzfQ.i6pdBckA-IkqcSPnPiv5wKafjGalJxk1MKDzkjV8fNU",
+          Authorization: `Bearer ${token}`, // Injection du token
           "Content-Type": "application/json",
         },
       });
+
       const data = await response.json();
+
       if (Array.isArray(data)) {
         setClothingItems(data);
+      } else {
+        // En cas d'erreur de token ou autre, on met un tableau vide
+        setClothingItems([]);
       }
     } catch (error) {
       console.error("Erreur chargement :", error);
@@ -65,7 +79,6 @@ export default function DressingScreen() {
   const filterItems = () => {
     let filtered = [...clothingItems];
 
-    // Filtre par catégorie
     if (selectedCategory !== "all") {
       filtered = filtered.filter((item) => {
         const cat = (item.style || "").toLowerCase().trim();
@@ -101,7 +114,6 @@ export default function DressingScreen() {
       </View>
 
       <View style={styles.cardInfo}>
-        {/* LIGNE 1 : NOM • MARQUE */}
         <Text style={styles.itemName} numberOfLines={1}>
           {item.type}{" "}
           {item.brand && item.brand !== "Sans marque" ? `• ${item.brand}` : ""}
@@ -118,7 +130,6 @@ export default function DressingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Mon Dressing</Text>
@@ -134,7 +145,6 @@ export default function DressingScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Recherche */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
           <Search color="#909090" size={18} />
@@ -147,7 +157,6 @@ export default function DressingScreen() {
         </View>
       </View>
 
-      {/* Filtres (ScrollView) */}
       <View style={{ height: 50, marginBottom: 10 }}>
         <ScrollView
           horizontal
@@ -161,7 +170,7 @@ export default function DressingScreen() {
                 styles.categoryChip,
                 selectedCategory === cat.id && styles.categoryChipActive,
               ]}
-              onPress={() => setSelectedCategory(cat.id)} // ICI ON CHANGE L'ÉTAT
+              onPress={() => setSelectedCategory(cat.id)}
             >
               <Text
                 style={[
@@ -176,7 +185,6 @@ export default function DressingScreen() {
         </ScrollView>
       </View>
 
-      {/* Grille */}
       {loading ? (
         <ActivityIndicator
           size="large"
@@ -185,7 +193,7 @@ export default function DressingScreen() {
         />
       ) : (
         <FlatList
-          data={filteredItems} // ON UTILISE BIEN LA LISTE FILTRÉE
+          data={filteredItems}
           renderItem={renderClothingCard}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
