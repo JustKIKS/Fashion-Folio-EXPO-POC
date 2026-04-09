@@ -40,7 +40,7 @@ export const markAsRead = (conversationId) => {
 };
 
 export const MOCK_USER = {
-    name: "LUser",
+    name: "User",
     username: "@user_mode",
     bio: "Passionné de mode 👗 | Streetwear & Élégance",
     avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=764",
