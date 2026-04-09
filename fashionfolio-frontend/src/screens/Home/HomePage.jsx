@@ -148,9 +148,7 @@ export default function HomePage() {
             </View>
           </View>
           <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.iconBtn}>
-              <Moon size={18} color={TEXT_SECONDARY} />
-            </TouchableOpacity>
+            
             <TouchableOpacity
               style={styles.iconBtn}
               onPress={() => navigation.navigate("Social")}
