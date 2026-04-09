@@ -6,6 +6,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Settings, Crown, Heart, TrendingUp, Edit2, LogOut, Shirt, Calendar } from 'lucide-react-native';
 import { MOCK_USER } from '../../services/mock';
+import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
