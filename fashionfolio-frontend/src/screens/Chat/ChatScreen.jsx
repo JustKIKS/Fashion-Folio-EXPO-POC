@@ -10,8 +10,14 @@ import {
   Platform,
   Image,
 } from "react-native";
+// 🚨 AJOUT DES IMPORTS
+import { useNavigation } from "@react-navigation/native";
+import { ArrowLeft, RotateCcw } from "lucide-react-native";
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function ChatScreen() {
+  const navigation = useNavigation(); // 👈 Initialisation de la navigation
   const [maQuestion, setMaQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -41,8 +47,8 @@ export default function ChatScreen() {
     setIsTyping(true);
 
     try {
-      const urlDuBack = "http://10.1.219.54:8000/chat/";
-      const res = await fetch(urlDuBack, {
+      // 🚨 UTILISATION DE L'API_URL DU .ENV
+      const res = await fetch(`${API_URL}/chat/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: messageATraiter, user_id: 1 }),
@@ -99,6 +105,14 @@ export default function ChatScreen() {
     >
       {estAuDebut ? (
         <View style={styles.landingContainer}>
+          {/* 🚨 BOUTON RETOUR SUR LE LANDING */}
+          <TouchableOpacity
+            style={styles.floatingBackButton}
+            onPress={() => navigation.goBack()}
+          >
+            <ArrowLeft color="#1C0256" size={24} />
+          </TouchableOpacity>
+
           <View style={styles.bgCircleTop} />
           <View style={styles.bgCircleBottom} />
 
@@ -146,12 +160,23 @@ export default function ChatScreen() {
       ) : (
         <View style={{ flex: 1 }}>
           <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={nouvelleConversation}
-            >
-              <Text style={styles.backButtonText}>← Nouvelle demande</Text>
-            </TouchableOpacity>
+            {/* 🚨 HEADER AMÉLIORÉ AVEC RETOUR ET RESET */}
+            <View style={styles.headerButtonsRow}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+              >
+                <ArrowLeft color="#4A26D0" size={20} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.resetButton}
+                onPress={nouvelleConversation}
+              >
+                <RotateCcw color="#4A26D0" size={16} />
+                <Text style={styles.backButtonText}>Nouvelle demande</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <FlatList
@@ -200,6 +225,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 25,
   },
+  floatingBackButton: {
+    position: "absolute",
+    top: 60,
+    left: 20,
+    zIndex: 10,
+    padding: 10,
+  },
   topSection: {
     position: "absolute",
     top: 80,
@@ -208,7 +240,7 @@ const styles = StyleSheet.create({
   },
   centerContent: {
     width: "100%",
-    marginTop: 80, // Espace pour laisser respirer le titre du haut
+    marginTop: 80,
   },
   greetingWrapper: {
     marginBottom: 20,
@@ -216,7 +248,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 26,
-    color: "#B0B0B0", // Gris Gemini
+    color: "#B0B0B0",
     fontWeight: "400",
   },
   questionText: {
@@ -251,7 +283,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "#4A26D0",
     letterSpacing: -0.5,
-    opacity: 0.6, // Plus discret en haut
+    opacity: 0.6,
   },
   heroSubtitle: {
     fontSize: 12,
@@ -261,7 +293,7 @@ const styles = StyleSheet.create({
   suggestionsWrapper: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center", // Aligné à gauche avec le texte
+    justifyContent: "center",
     marginTop: 25,
     gap: 10,
   },
@@ -319,15 +351,31 @@ const styles = StyleSheet.create({
   header: {
     height: 110,
     justifyContent: "flex-end",
-    paddingLeft: 20,
+    paddingHorizontal: 20,
     paddingBottom: 15,
   },
+  headerButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+  },
   backButton: {
-    alignSelf: "flex-start",
+    width: 44,
+    height: 44,
+    backgroundColor: "#F2F2F7",
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  resetButton: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 10,
     backgroundColor: "#F2F2F7",
     borderRadius: 15,
+    gap: 8,
   },
   backButtonText: { color: "#4A26D0", fontWeight: "700", fontSize: 13 },
   bottomInputArea: {
