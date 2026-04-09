@@ -51,7 +51,8 @@ export default function ProfileScreen() {
         </View>
 
         {/* Bouton modifier */}
-          <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>          <Edit2 color="#fff" size={16} />
+          <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>          
+          <Edit2 color="#fff" size={16} />
           <Text style={styles.editButtonText}>Modifier mon profil</Text>
         </TouchableOpacity>
 
