@@ -25,7 +25,7 @@ import {
   Check,
 } from 'lucide-react-native';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.1.170.254:8000';
 
 function getPasswordStrength(password) {
   if (password.length === 0) return { level: 0, label: '', color: '#E5E7EB' };
