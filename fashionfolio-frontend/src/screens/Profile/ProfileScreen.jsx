@@ -8,11 +8,27 @@ import { Settings, Crown, Heart, TrendingUp, Edit2, LogOut, Shirt, Calendar } fr
 import { MOCK_USER } from '../../services/mock';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('tenues');
   const isPremium = MOCK_USER.isPremium;
+  const [userData, setUserData] = useState(null);
+
+useFocusEffect(
+  useCallback(() => {
+    const loadUser = async () => {
+      const data = await AsyncStorage.getItem('userData');
+      if (data) setUserData(JSON.parse(data));
+    };
+    loadUser();
+  }, [])
+);
+
+const displayName = userData?.full_name || userData?.email?.split('@')[0] || MOCK_USER.name;
+const displayUsername = userData?.email ? `@${userData.email.split('@')[0]}` : MOCK_USER.username;
 
   return (
     <ScrollView style={styles.container}>
@@ -35,8 +51,8 @@ export default function ProfileScreen() {
         </View>
 
         {/* Nom + username + bio */}
-        <Text style={styles.name}>{MOCK_USER.name}</Text>
-        <Text style={styles.username}>{MOCK_USER.username}</Text>
+        <Text style={styles.name}>{displayName}</Text>
+        <Text style={styles.username}>{displayUsername}</Text>
         <Text style={styles.bio}>{MOCK_USER.bio}</Text>
 
         {/* Abonnés / Abonnements */}
