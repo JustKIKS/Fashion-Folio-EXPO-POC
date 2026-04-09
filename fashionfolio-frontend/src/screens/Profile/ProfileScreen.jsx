@@ -78,12 +78,12 @@ export default function ProfileScreen() {
         </View>
 
         {/* Quick Actions */}
-        <View style={styles.actionsGrid}>
-          <TouchableOpacity style={styles.actionButton}>
+        <View style={styles.actionsGrid} >
+          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Stats')}>
             <TrendingUp color="#4A26D0" size={20} />
             <Text style={styles.actionLabel}>Stats</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Dressing')}>
             <Shirt color="#4A26D0" size={20} />
             <Text style={styles.actionLabel}>Dressing</Text>
           </TouchableOpacity>
