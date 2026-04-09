@@ -160,7 +160,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   banner: {
-    height: 140,
+    height: 145,
     paddingHorizontal: 20,
     paddingTop: 60,
   },
