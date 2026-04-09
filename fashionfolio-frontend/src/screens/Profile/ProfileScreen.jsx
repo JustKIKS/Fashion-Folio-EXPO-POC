@@ -160,7 +160,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   banner: {
-    height: 160,
+    height: 140,
     paddingHorizontal: 20,
     paddingTop: 60,
   },
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   profileCard: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
-    marginTop: -20,
+    marginTop: -30,
     borderRadius: 24,
     padding: 20,
     alignItems: 'center',
