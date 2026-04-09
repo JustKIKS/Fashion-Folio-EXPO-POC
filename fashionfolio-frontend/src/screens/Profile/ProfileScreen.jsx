@@ -145,12 +145,27 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Déconnexion */}
-      <View style={styles.logoutContainer}>
-        <TouchableOpacity style={styles.logoutButton}>
-          <LogOut color="#FF3B30" size={20} />
-          <Text style={styles.logoutText}>Se déconnecter</Text>
-        </TouchableOpacity>
+{/* Déconnexion */}
+<View style={styles.logoutContainer}>
+  <TouchableOpacity style={styles.logoutButton} onPress={() => {
+    Alert.alert(
+      'Déconnexion',
+      'Êtes-vous sûr de vouloir vous déconnecter ?',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        { text: 'Se déconnecter', style: 'destructive', onPress: async () => {
+          await AsyncStorage.removeItem('token');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          });
+        }}
+      ]
+    );
+  }}>
+    <LogOut color="#FF3B30" size={20} />
+    <Text style={styles.logoutText}>Se déconnecter</Text>
+  </TouchableOpacity>
       </View>
     </ScrollView>
   );
