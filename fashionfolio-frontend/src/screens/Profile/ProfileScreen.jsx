@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   profileCard: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
-    marginTop: -30,
+    marginTop: -35,
     borderRadius: 24,
     padding: 20,
     alignItems: 'center',
