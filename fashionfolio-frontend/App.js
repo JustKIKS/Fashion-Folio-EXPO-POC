@@ -16,6 +16,7 @@ import SettingsScreen from './src/screens/Profile/SettingsScreen';
 import ChangePasswordScreen from './src/screens/Profile/ChangePasswordScreen';
 import BlockedUsersScreen from './src/screens/Profile/BlockedUsersScreen';
 import LanguageScreen from './src/screens/Profile/LanguageScreen';
+import SubscriptionsScreen from './src/screens/Profile/SubscriptionsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,7 @@ export default function App() {
           <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
           <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
           <Stack.Screen name="Language" component={LanguageScreen} />
+          <Stack.Screen name="Subscriptions" component={SubscriptionsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </MarketplaceProvider>
