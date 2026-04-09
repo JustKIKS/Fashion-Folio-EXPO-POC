@@ -80,7 +80,7 @@ export default function SettingsScreen() {
 
         {/* Sécurité */}
         <Section title="Sécurité" icon={Shield}>
-            <RowItem icon={Lock} label="Modifier le mot de passe" onPress={() => Alert.alert('Bientôt disponible')} />
+            <RowItem icon={Lock} label="Modifier le mot de passe" onPress={() => navigation.navigate('ChangePassword')} />
             <RowItem icon={Shield} label="Authentification à deux facteurs" onPress={() => Alert.alert('Bientôt disponible')} />
         </Section>
 
