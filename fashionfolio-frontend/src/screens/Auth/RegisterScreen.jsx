@@ -66,8 +66,8 @@ export default function RegisterScreen({ navigation }) {
       newErrors.username = "Pas d'espaces autorisés";
     if (!email || !email.includes('@') || !email.includes('.'))
       newErrors.email = 'Adresse email invalide';
-    if (!password || password.length < 4)
-      newErrors.password = 'Minimum 4 caractères';
+    if (!password || password.length < 8)
+      newErrors.password = 'Minimum 8S caractères';
     if (confirmPassword !== password)
       newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
     return newErrors;
