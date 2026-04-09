@@ -7,11 +7,12 @@ import {
   MessageSquare,
   Users,
   User,
+  ShoppingBag,
 } from "lucide-react-native";
 
 import HomeScreen from "../screens/Home/HomePage";
 import DressingScreen from "../screens/Dressing/DressingListScreen";
-import ChatScreen from "../screens/Chat/ChatScreen";
+import MarketplaceScreen from "../screens/MarketPlace/MarketPlaceScreen";
 import SocialScreen from "../screens/Social/FeedScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 
@@ -52,10 +53,10 @@ export default function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="IA Chat"
-        component={ChatScreen}
+        name="MarketPlace"
+        component={MarketplaceScreen}
         options={{
-          tabBarIcon: ({ color }) => <MessageSquare color={color} size={24} />,
+          tabBarIcon: ({ color }) => <ShoppingBag color={color} size={24} />,
         }}
       />
       <Tab.Screen
