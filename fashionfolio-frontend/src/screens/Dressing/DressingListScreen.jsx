@@ -10,12 +10,14 @@ import {
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  Alert, // 🚨 Ajouté
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { Search, Plus } from "lucide-react-native";
+import { Search, Plus, Sparkles } from "lucide-react-native"; // 🚨 Ajouté Sparkles
+import * as ImagePicker from "expo-image-picker"; // 🚨 Ajouté
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const categories = [
   { id: "all", label: "Tout" },
@@ -46,7 +48,6 @@ export default function DressingScreen() {
 
   const loadItems = async () => {
     try {
-      // Récupération du token dynamique stocké au login
       const token = await AsyncStorage.getItem("userToken");
 
       if (!token) {
@@ -58,7 +59,7 @@ export default function DressingScreen() {
       const response = await fetch(`${API_URL}/wardrobe/`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`, // Injection du token
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -68,11 +69,65 @@ export default function DressingScreen() {
       if (Array.isArray(data)) {
         setClothingItems(data);
       } else {
-        // En cas d'erreur de token ou autre, on met un tableau vide
         setClothingItems([]);
       }
     } catch (error) {
       console.error("Erreur chargement :", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🤖 FONCTION SCAN IA (GEMINI VISION)
+  const uploadWithAI = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.7,
+    });
+
+    if (result.canceled) return;
+
+    const localUri = result.assets[0].uri;
+    const filename = localUri.split("/").pop();
+    const match = /\.(\w+)$/.exec(filename);
+    const type = match ? `image/${match[1]}` : `image`;
+
+    setLoading(true);
+
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+
+      // FormData obligatoire pour envoyer un fichier
+      const formData = new FormData();
+      formData.append("file", { uri: localUri, name: filename, type });
+
+      const response = await fetch(`${API_URL}/wardrobe/upload-photo`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // On ne met PAS de Content-Type ici, fetch le gère pour le FormData
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert(
+          "Analyse réussie ✨",
+          `Gemini a détecté : ${data.attributes.type} ${data.attributes.color} (${data.attributes.style})`,
+        );
+        loadItems(); // Refresh la liste
+      } else {
+        Alert.alert(
+          "Erreur IA",
+          "L'analyse a échoué. Réessayez avec une photo plus claire.",
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Erreur", "Connexion au serveur impossible.");
     } finally {
       setLoading(false);
     }
@@ -132,6 +187,7 @@ export default function DressingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header avec bouton IA */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Mon Dressing</Text>
@@ -139,12 +195,20 @@ export default function DressingScreen() {
             {filteredItems.length} article{filteredItems.length > 1 ? "s" : ""}
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.plusButton}
-          onPress={() => navigation.navigate("AddClothing")}
-        >
-          <Plus color="white" size={24} />
-        </TouchableOpacity>
+
+        <View style={styles.headerRight}>
+          <TouchableOpacity style={styles.aiButton} onPress={uploadWithAI}>
+            <Sparkles color="white" size={20} />
+            <Text style={styles.aiButtonText}>Scan IA</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.plusButton}
+            onPress={() => navigation.navigate("AddClothing")}
+          >
+            <Plus color="white" size={24} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.searchContainer}>
@@ -188,11 +252,10 @@ export default function DressingScreen() {
       </View>
 
       {loading ? (
-        <ActivityIndicator
-          size="large"
-          color="#4A26D0"
-          style={{ marginTop: 50 }}
-        />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4A26D0" />
+          <Text style={styles.loadingText}>Analyse Gemini en cours...</Text>
+        </View>
       ) : (
         <FlatList
           data={filteredItems}
@@ -223,6 +286,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
   headerTitle: { fontSize: 28, fontWeight: "900", color: "#1C0256" },
   headerSubtitle: { fontSize: 14, color: "#909090" },
   plusButton: {
@@ -233,6 +301,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  aiButton: {
+    flexDirection: "row",
+    backgroundColor: "#1C0256",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignItems: "center",
+    gap: 6,
+  },
+  aiButtonText: { color: "white", fontWeight: "bold", fontSize: 12 },
   searchContainer: { paddingHorizontal: 20, marginBottom: 15 },
   searchBar: {
     flexDirection: "row",
@@ -270,6 +348,13 @@ const styles = StyleSheet.create({
   cardInfo: { padding: 10 },
   itemName: { fontSize: 14, fontWeight: "bold", color: "#1C0256" },
   itemBrand: { fontSize: 12, color: "#909090" },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+  },
+  loadingText: { marginTop: 15, color: "#4A26D0", fontWeight: "600" },
   emptyContainer: {
     alignItems: "center",
     marginTop: 50,

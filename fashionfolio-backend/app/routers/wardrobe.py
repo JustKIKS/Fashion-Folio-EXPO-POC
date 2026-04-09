@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 import sqlite3
 import os
 import aiofiles
+import uuid
 
 from app.database import get_db, get_connection
 from app.auth_utils import get_current_user
@@ -15,10 +16,8 @@ router = APIRouter(prefix="/wardrobe", tags=["wardrobe"])
 @router.get("/", response_model=list[ClothingOut])
 def list_wardrobe(
     db: sqlite3.Connection = Depends(get_db),
-    # 🚨 CORRECTION 1 : On décommente cette ligne pour lire le token
     current_user: dict = Depends(get_current_user),
 ):
-    # 🚨 CORRECTION 2 : On remplace le "1" par le vrai ID du propriétaire du token
     return wardrobe_service.get_wardrobe(db, current_user["id"])
 
 
@@ -46,36 +45,51 @@ def add_item(
 @router.post("/upload-photo")
 async def upload_photo(
     file: UploadFile = File(...),
-    # 🚨 CORRECTION 3 : L'upload photo est maintenant sécurisé par le token lui aussi !
     current_user: dict = Depends(get_current_user)
 ):
     user_id = current_user["id"]
     image_bytes = await file.read()
+
+    # Analyse via Gemini Vision
     attributes = analyze_clothing_photo(image_bytes)
 
-    # Sauvegarde l'image en local
+    # 🚨 FIX : Création automatique du dossier s'il n'existe pas
+    upload_dir = "uploads/clothing"
+    os.makedirs(upload_dir, exist_ok=True)
+
+    # Sauvegarde l'image en local avec un nom unique
     extension = file.filename.split(".")[-1]
     filename = f"user_{user_id}_{os.urandom(4).hex()}.{extension}"
-    filepath = f"uploads/clothing/{filename}"
+    filepath = os.path.join(upload_dir, filename)
 
     async with aiofiles.open(filepath, "wb") as f:
         await f.write(image_bytes)
 
-    # Assure-toi de mettre la bonne IP ici si tu testes sur mobile (ex: http://10.1.219.54:8000)
-    photo_url = f"http://10.1.219.54:8000/uploads/clothing/{filename}"
+    # ⚠️ ATTENTION : Change l'IP par celle de ta box (192.168...)
+    # pour que ton téléphone puisse charger l'image !
+    current_ip = "192.168.1.188"  # Ton IP actuelle chez toi
+    photo_url = f"http://{current_ip}:8000/uploads/clothing/{filename}"
 
-    # Insère en DB avec la photo_url
+    # Insère en DB avec les attributs trouvés par l'IA
     conn = get_connection()
     cursor = conn.execute(
         "INSERT INTO clothing (user_id, type, color, style, pattern, brand, season, photo_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        (user_id, attributes.get("type"), attributes.get("color"), attributes.get("style"),
-         attributes.get("pattern"), attributes.get("brand"), attributes.get("season"), photo_url)
+        (
+            user_id,
+            attributes.get("type"),
+            attributes.get("color"),
+            attributes.get("style"),
+            attributes.get("pattern"),
+            attributes.get("brand"),
+            attributes.get("season"),
+            photo_url
+        )
     )
     conn.commit()
     conn.close()
 
     return {
-        "message": "Vêtement ajouté automatiquement ✅",
+        "message": "Vêtement analysé et ajouté ✅",
         "id": cursor.lastrowid,
         "photo_url": photo_url,
         "attributes": attributes
