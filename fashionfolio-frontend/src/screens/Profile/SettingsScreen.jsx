@@ -95,7 +95,7 @@ export default function SettingsScreen() {
         <Section title="Confidentialité" icon={Eye}>
             <ToggleItem icon={Eye} label="Profil public" value={profilPublic} onValueChange={setProfilPublic} />
             <ToggleItem icon={Eye} label="Statistiques visibles" value={statsVisibles} onValueChange={setStatsVisibles} />
-            <RowItem icon={UserX} label="Utilisateurs bloqués" onPress={() => Alert.alert('Bientôt disponible')} />
+            <RowItem icon={UserX} label="Utilisateurs bloqués" onPress={() => navigation.navigate('BlockedUsers')} />
         </Section>
 
         {/* Affichage */}
