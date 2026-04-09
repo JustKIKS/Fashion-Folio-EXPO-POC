@@ -17,6 +17,8 @@ import { ArrowLeft, Upload, X } from "lucide-react-native";
 import { useContext } from "react";
 import { MarketplaceContext } from "../../context/MarketplaceContext";
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
 const conditions = [
   { value: "neuf", label: "Neuf avec étiquette" },
   { value: "comme_neuf", label: "Comme neuf" },
@@ -89,7 +91,7 @@ export default function SellItemScreen() {
 
   const loadUserItems = async () => {
     try {
-      const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
+      const response = await fetch(`${API_URL}/wardrobe/`, {
         method: "GET",
         headers: {
           Authorization:
@@ -130,7 +132,7 @@ export default function SellItemScreen() {
 
   const handleImageUpload = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,

@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 import { Camera, ArrowLeft } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -58,7 +60,7 @@ export default function AddClothingScreen() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
@@ -94,7 +96,7 @@ export default function AddClothingScreen() {
         return;
       }
 
-      const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
+      const response = await fetch(`${API_URL}/wardrobe/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,10 +117,15 @@ export default function AddClothingScreen() {
         Alert.alert("Succès", "Vêtement ajouté !");
         navigation.goBack();
       } else {
-        Alert.alert("Erreur", "Impossible d'ajouter le vêtement.");
+        const errorData = await response.json().catch(() => null);
+        const detail = errorData?.detail
+          ? JSON.stringify(errorData.detail)
+          : `Code ${response.status}`;
+        Alert.alert("Erreur", `Impossible d'ajouter le vêtement.\n${detail}`);
       }
     } catch (error) {
       console.error(error);
+      Alert.alert("Erreur réseau", error.message);
     } finally {
       setLoading(false);
     }

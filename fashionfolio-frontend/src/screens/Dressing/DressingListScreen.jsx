@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Search, Plus } from "lucide-react-native";
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const categories = [
@@ -53,7 +55,7 @@ export default function DressingScreen() {
         return;
       }
 
-      const response = await fetch("http://10.1.219.54:8000/wardrobe/", {
+      const response = await fetch(`${API_URL}/wardrobe/`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`, // Injection du token
