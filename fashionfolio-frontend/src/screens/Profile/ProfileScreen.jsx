@@ -18,7 +18,7 @@ export default function ProfileScreen() {
       <View style={[styles.banner, { backgroundColor: isPremium ? '#FFD700' : '#4A26D0' }]}>
         <View style={styles.bannerHeader}>
           <Text style={styles.bannerTitle}>Mon profil</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <Settings color="#fff" size={24} />
           </TouchableOpacity>
         </View>

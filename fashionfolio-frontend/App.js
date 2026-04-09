@@ -7,6 +7,7 @@ import AddClothingScreen from "./src/screens/Dressing/AddClothingScreen";
 import DMListScreen from "./src/screens/Social/DMListScreen";
 import DMConversationScreen from "./src/screens/Social/DMConversationScreen";
 import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
+import SettingsScreen from './src/screens/Profile/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
         <Stack.Screen name="DMList" component={DMListScreen} />
         <Stack.Screen name="DMConversation" component={DMConversationScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
