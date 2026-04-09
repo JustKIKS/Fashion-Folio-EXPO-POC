@@ -55,7 +55,6 @@ export default function ProfileScreen() {
           <Edit2 color="#fff" size={16} />
           <Text style={styles.editButtonText}>Modifier mon profil</Text>
         </TouchableOpacity>
-
         {/* Stats Cards */}
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
