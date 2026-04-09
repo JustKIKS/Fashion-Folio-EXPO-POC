@@ -66,6 +66,13 @@ export default function LoginScreen({ navigation }) {
       const userData = await userResponse.json();
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
 
+      // Récupérer les infos de l'utilisateur
+      const userResponse = await fetch(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${data.access_token}` }
+      });
+      const userData = await userResponse.json();
+      await AsyncStorage.setItem("userData", JSON.stringify(userData));
+
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
     } catch {
       setError("Une erreur est survenue. Vérifiez votre connexion.");
