@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,8 +14,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
-// 🚨 CORRECTION 1 : On remet la bonne adresse IP à la place de localhost
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://10.1.219.54:8000";
 
 export default function LoginScreen({ navigation }) {
@@ -27,15 +27,31 @@ export default function LoginScreen({ navigation }) {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
+  // 🚨 CORRECTION : On nettoie le token dès qu'on arrive sur cette page
+  // Cela empêche l'app de garder un vieux token d'un autre compte
+  useFocusEffect(
+    useCallback(() => {
+      const clearToken = async () => {
+        await AsyncStorage.removeItem("userToken");
+      };
+      clearToken();
+    }, []),
+  );
+
   const handleLogin = async () => {
     setError("");
     setIsLoading(true);
+
+    // 🚨 NETTOYAGE ANTI-PIÈGE MOBILE : on enlève les espaces et on met en minuscules
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: cleanEmail, password }), // On utilise cleanEmail !
       });
+      // ... la suite reste identique
       const data = await response.json();
 
       if (!response.ok) {
@@ -43,7 +59,6 @@ export default function LoginScreen({ navigation }) {
         return;
       }
 
-      // 🚨 CORRECTION 2 : On utilise bien "userToken" pour que la Home Page le trouve !
       await AsyncStorage.setItem("userToken", data.access_token);
 
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });

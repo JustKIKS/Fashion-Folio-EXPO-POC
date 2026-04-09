@@ -55,6 +55,7 @@ function getGreeting() {
 function Skeleton({ style }) {
   return <View style={[styles.skeleton, style]} />;
 }
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 function LoadingState() {
   return (
@@ -95,7 +96,7 @@ export default function HomePage() {
       }
 
       // 2. Appel pour récupérer l'utilisateur avec le VRAI token
-      const userResponse = await fetch("http://10.1.219.54:8000/auth/me", {
+      const userResponse = await fetch(`${API_URL}/auth/me`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`, // 👈 INJECTION DYNAMIQUE DU TOKEN
@@ -111,16 +112,13 @@ export default function HomePage() {
       }
 
       // 3. Appel pour récupérer le dressing avec le VRAI token
-      const wardrobeResponse = await fetch(
-        "http://10.1.219.54:8000/wardrobe/",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // 👈 INJECTION DYNAMIQUE ICI AUSSI
-            "Content-Type": "application/json",
-          },
+      const wardrobeResponse = await fetch(`${API_URL}/wardrobe/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // 👈 INJECTION DYNAMIQUE ICI AUSSI
+          "Content-Type": "application/json",
         },
-      );
+      });
 
       if (wardrobeResponse.ok) {
         const items = await wardrobeResponse.json();
