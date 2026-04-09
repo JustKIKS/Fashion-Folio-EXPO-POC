@@ -65,9 +65,6 @@ export default function LoginScreen({ navigation }) {
       });
       const userData = await userResponse.json();
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
-      
-      const userData = await userResponse.json();
-      await AsyncStorage.setItem("userData", JSON.stringify(userData));
 
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
     } catch {
