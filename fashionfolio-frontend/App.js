@@ -9,6 +9,7 @@ import DMConversationScreen from "./src/screens/Social/DMConversationScreen";
 import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
 import SettingsScreen from './src/screens/Profile/SettingsScreen';
 import LanguageScreen from './src/screens/Profile/LanguageScreen';
+import ChangePasswordScreen from './src/screens/Profile/ChangePasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export default function App() {
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="Language" component={LanguageScreen} />
+        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
