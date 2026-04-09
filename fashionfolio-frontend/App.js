@@ -19,6 +19,8 @@ import LanguageScreen from "./src/screens/Profile/LanguageScreen";
 import SubscriptionsScreen from "./src/screens/Profile/SubscriptionsScreen";
 import AIChatScreen from "./src/screens/Chat/ChatScreen";
 
+import StatsScreen from "./src/screens/Profile/StatsScreen";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
