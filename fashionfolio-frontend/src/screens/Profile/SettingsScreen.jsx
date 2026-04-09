@@ -101,8 +101,7 @@ export default function SettingsScreen() {
         {/* Affichage */}
         <Section title="Affichage" icon={Sun}>
             <ToggleItem icon={Sun} label="Mode sombre" value={modeSombre} onValueChange={setModeSombre} />
-            <RowItem icon={Globe} label="Langue" value="Français" onPress={() => Alert.alert('Bientôt disponible')} />
-        </Section>
+            <RowItem icon={Globe} label="Langue" value="Français" onPress={() => navigation.navigate('Language')} />        </Section>
 
         {/* Aide & Support */}
         <Section title="Aide & Support" icon={HelpCircle}>
