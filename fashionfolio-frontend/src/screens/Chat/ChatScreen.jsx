@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   },
   megaAvatarImage: {
     width: "100%",
-    height: "160%",
+    height: "150%",
     resizeMode: "cover",
     transform: [{ translateX: -4 }],
   },

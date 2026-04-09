@@ -46,7 +46,7 @@ const OUTFIT_CARD_COLORS = [
 function getGreeting() {
   const h = new Date().getHours();
   if (h < 12) return "Bonjour,";
-  if (h < 18) return "Bon après-midi,";
+  if (h < 18) return "Bienvenue a vous,";
   return "Bonsoir,";
 }
 
