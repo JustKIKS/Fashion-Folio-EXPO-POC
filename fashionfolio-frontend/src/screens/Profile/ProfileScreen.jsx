@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, ScrollView,
-  TouchableOpacity, Image
+  TouchableOpacity, Image, ActivityIndicator
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Settings, Crown, Heart, TrendingUp, Edit2, LogOut, Shirt, Calendar } from 'lucide-react-native';
@@ -9,10 +9,48 @@ import { MOCK_USER } from '../../services/mock';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState('tenues');
-  const isPremium = MOCK_USER.isPremium;
+const [activeTab, setActiveTab] = useState('tenues');
+const [user, setUser] = useState(null);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  loadUserProfile();
+}, []);
+
+const loadUserProfile = async () => {
+  try {
+    const token = await AsyncStorage.getItem('userToken');
+    if (!token) { setLoading(false); return; }
+    const response = await fetch(`${API_URL}/auth/me`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    });
+    if (response.ok) {
+      const userData = await response.json();
+      setUser(userData);
+    }
+  } catch (error) {
+    console.error('Erreur profil:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+if (loading) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#4A26D0" />
+    </View>
+  );
+}
+
+const displayName = user?.username || 'Utilisateur';
+const displayEmail = user?.email || '';
+const isPremium = MOCK_USER.isPremium;
 
   return (
     <ScrollView style={styles.container}>
@@ -35,8 +73,8 @@ export default function ProfileScreen() {
         </View>
 
         {/* Nom + username + bio */}
-        <Text style={styles.name}>{MOCK_USER.name}</Text>
-        <Text style={styles.username}>{MOCK_USER.username}</Text>
+        <Text style={styles.name}>{displayName}</Text>
+        <Text style={styles.username}>{displayEmail}</Text>
         <Text style={styles.bio}>{MOCK_USER.bio}</Text>
 
         {/* Abonnés / Abonnements */}
@@ -156,7 +194,7 @@ export default function ProfileScreen() {
       [
         { text: 'Annuler', style: 'cancel' },
         { text: 'Se déconnecter', style: 'destructive', onPress: async () => {
-          await AsyncStorage.removeItem('token');
+          await AsyncStorage.removeItem('userToken');
           navigation.reset({
             index: 0,
             routes: [{ name: 'Login' }],

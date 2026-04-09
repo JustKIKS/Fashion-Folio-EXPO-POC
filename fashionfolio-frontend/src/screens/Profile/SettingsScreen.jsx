@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View, Text, StyleSheet, ScrollView,
     TouchableOpacity, Switch, Alert
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import {
     ArrowLeft, Mail, Calendar, User, Lock, Shield,
     Bell, Users, ShoppingBag, Eye, UserX, Sun,
     Globe, HelpCircle, Bug, MessageSquare, Trash2, ChevronRight
 } from 'lucide-react-native';
 import { MOCK_USER } from '../../services/mock';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function SettingsScreen() {
     const navigation = useNavigation();
@@ -19,6 +21,18 @@ export default function SettingsScreen() {
     const [profilPublic, setProfilPublic] = useState(true);
     const [statsVisibles, setStatsVisibles] = useState(true);
     const [modeSombre, setModeSombre] = useState(false);
+
+    const [userData, setUserData] = useState(null);
+
+    useFocusEffect(
+        useCallback(() => {
+            const loadUser = async () => {
+                const data = await AsyncStorage.getItem('userData');
+                if (data) setUserData(JSON.parse(data));
+            };
+            loadUser();
+        }, [])
+);
 
     const Section = ({ title, icon: Icon, children }) => (
     <View style={styles.section}>
@@ -73,8 +87,7 @@ export default function SettingsScreen() {
 
         {/* Compte */}
         <Section title="Compte" icon={User}>
-            <RowItem icon={Mail} label="Email" value="lelia@example.com" />
-            <RowItem icon={Calendar} label="Date d'inscription" value="02/02/2026" />
+            <RowItem icon={Mail} label="Email" value={userData?.email || 'Non disponible'} />            <RowItem icon={Calendar} label="Date d'inscription" value="02/02/2026" />
             <RowItem icon={User} label="Type de compte" value="Particulier" />
         </Section>
 
