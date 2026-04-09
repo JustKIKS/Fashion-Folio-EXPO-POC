@@ -25,6 +25,7 @@ export default function App() {
         />
         <Stack.Screen name="DMList" component={DMListScreen} />
         <Stack.Screen name="DMConversation" component={DMConversationScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

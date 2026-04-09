@@ -12,7 +12,6 @@ export default function StackNavigator() {
             <Stack.Screen name="Tabs" component={TabNavigator} />
             <Stack.Screen name="DMList" component={DMListScreen} />
             <Stack.Screen name="DMConversation" component={DMConversationScreen} />
-            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         </Stack.Navigator>
     );
 }
