@@ -21,21 +21,6 @@ import {
   ChevronRight,
 } from "lucide-react-native";
 
-// ─── API placeholders ─────────────────────────────────────────────────────────
-// TODO: remplacer par les vrais appels → src/services/
-
-async function fetchCurrentUser() {
-  return {
-    full_name: "User Example",
-    onboarding_completed: true,
-    style_preferences: ["casual", "chic"],
-  };
-}
-
-async function fetchClothingItems(_email) {
-  return [];
-}
-
 // ─── Constantes de design ─────────────────────────────────────────────────────
 
 const PRIMARY = "#7C3AED";
@@ -98,10 +83,39 @@ export default function HomePage() {
 
   const loadData = async () => {
     try {
-      const currentUser = await fetchCurrentUser();
-      setUser(currentUser);
-      const items = await fetchClothingItems(currentUser.full_name ?? "");
-      setClothingItems(items);
+      // 1. Appel au backend pour récupérer l'utilisateur connecté
+      // 🚨 Remplace "/users/me" par la vraie route de ton backend si elle est différente (ex: /auth/me)
+      const userResponse = await fetch("http://10.1.219.54:8000/users/me", {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTczOTkzfQ.i6pdBckA-IkqcSPnPiv5wKafjGalJxk1MKDzkjV8fNU",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (userResponse.ok) {
+        const currentUser = await userResponse.json();
+        setUser(currentUser);
+      }
+
+      // 2. Appel au backend pour récupérer son dressing (pour mettre à jour le compteur d'articles)
+      const wardrobeResponse = await fetch(
+        "http://10.1.219.54:8000/wardrobe/",
+        {
+          method: "GET",
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTczOTkzfQ.i6pdBckA-IkqcSPnPiv5wKafjGalJxk1MKDzkjV8fNU",
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (wardrobeResponse.ok) {
+        const items = await wardrobeResponse.json();
+        setClothingItems(items);
+      }
     } catch (e) {
       console.error("Error loading home:", e);
     } finally {
@@ -111,7 +125,11 @@ export default function HomePage() {
 
   if (loading) return <LoadingState />;
 
-  const firstName = user?.full_name?.split(" ")[0] ?? "User Example";
+  const firstName =
+    user?.username ||
+    user?.full_name?.split(" ")[0] ||
+    user?.email?.split("@")[0] ||
+    "Mode Addict";
 
   const outfitCards =
     clothingItems.length > 0
@@ -129,8 +147,12 @@ export default function HomePage() {
   const stylesCount = user?.style_preferences?.length ?? 2;
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
