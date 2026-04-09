@@ -85,7 +85,7 @@ export default function ProfileScreen() {
             <Shirt color="#4A26D0" size={20} />
             <Text style={styles.actionLabel}>Dressing</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, styles.premiumButton]}>
+          <TouchableOpacity style={[styles.actionButton, styles.premiumButton]}onPress={() => navigation.navigate('Subscriptions')}>
             <Crown color="#FFD700" size={20} />
             <Text style={[styles.actionLabel, { color: '#1C0256' }]}>Premium</Text>
           </TouchableOpacity>
@@ -102,7 +102,7 @@ export default function ProfileScreen() {
               <Text style={styles.premiumBannerSubtitle}>Tenues illimitées, IA avancée et bien plus</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.premiumBannerButton}>
+          <TouchableOpacity style={styles.premiumBannerButton}onPress={() => navigation.navigate('Subscriptions')}>
             <Text style={styles.premiumBannerButtonText}>Découvrir les offres</Text>
           </TouchableOpacity>
         </View>
