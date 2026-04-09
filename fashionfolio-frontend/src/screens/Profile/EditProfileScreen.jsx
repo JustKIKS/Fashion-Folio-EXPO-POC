@@ -12,6 +12,9 @@ export default function EditProfileScreen() {
     const [name, setName] = useState(MOCK_USER.name);
     const [username, setUsername] = useState(MOCK_USER.username);
     const [bio, setBio] = useState(MOCK_USER.bio);
+    const [instagram, setInstagram] = useState('');
+    const [tiktok, setTiktok] = useState('');
+    const [website, setWebsite] = useState('');
 
     const handleSave = () => {
     navigation.goBack();
@@ -162,4 +165,7 @@ const styles = StyleSheet.create({
         color: '#1C0256',
     },
     bioInput: { height: 100, textAlignVertical: 'top' },
+    socialSection: { marginTop: 20 },
+    socialHeader: { marginBottom: 16 },
+    sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#1C0256' },
 });
