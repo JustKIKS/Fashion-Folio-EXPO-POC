@@ -38,3 +38,15 @@ export const markAsRead = (conversationId) => {
     conv.id === conversationId ? { ...conv, unread_count: 0 } : conv
     );
 };
+
+export const MOCK_USER = {
+    name: "Testing",
+    username: "@test_mode",
+    bio: "Passionnée de mode 👗 | Streetwear & Élégance",
+    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=764",
+    stats: {
+    pieces: 24,
+    outfits: 8,
+    friends: 12
+    }
+};
