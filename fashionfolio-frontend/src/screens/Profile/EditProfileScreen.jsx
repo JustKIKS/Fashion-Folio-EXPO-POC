@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
     View, Text, StyleSheet, TouchableOpacity,
-    TextInput, ScrollView, Image
+    TextInput, ScrollView, Image, KeyboardAvoidingView, Platform
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ArrowLeft, Camera } from 'lucide-react-native';
@@ -21,6 +21,10 @@ export default function EditProfileScreen() {
     };
 
     return (
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        > 
         <ScrollView style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
@@ -120,6 +124,7 @@ export default function EditProfileScreen() {
                 </View>
             </View>
         </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
