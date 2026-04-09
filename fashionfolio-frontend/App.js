@@ -11,13 +11,13 @@ import LoginScreen from "./src/screens/Auth/LoginScreen";
 import RegisterScreen from "./src/screens/Auth/RegisterScreen";
 import SellItemScreen from "./src/screens/MarketPlace/SellItem.jsx";
 import ListingDetailsScreen from "./src/screens/MarketPlace/ListingDetails";
-import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
-import SettingsScreen from './src/screens/Profile/SettingsScreen';
-import ChangePasswordScreen from './src/screens/Profile/ChangePasswordScreen';
-import BlockedUsersScreen from './src/screens/Profile/BlockedUsersScreen';
-import LanguageScreen from './src/screens/Profile/LanguageScreen';
-import SubscriptionsScreen from './src/screens/Profile/SubscriptionsScreen';
-import StatsScreen from './src/screens/Profile/StatsScreen';
+import EditProfileScreen from "./src/screens/Profile/EditProfileScreen";
+import SettingsScreen from "./src/screens/Profile/SettingsScreen";
+import ChangePasswordScreen from "./src/screens/Profile/ChangePasswordScreen";
+import BlockedUsersScreen from "./src/screens/Profile/BlockedUsersScreen";
+import LanguageScreen from "./src/screens/Profile/LanguageScreen";
+import SubscriptionsScreen from "./src/screens/Profile/SubscriptionsScreen";
+import AIChatScreen from "./src/screens/Chat/ChatScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,22 +42,32 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="MainTabs" component={TabNavigator} />
+          <Stack.Screen name="IA Chat" component={AIChatScreen} />
           <Stack.Screen
             name="AddClothing"
             component={AddClothingScreen}
             options={{ presentation: "modal", headerShown: false }}
           />
           <Stack.Screen name="DMList" component={DMListScreen} />
-          <Stack.Screen name="DMConversation" component={DMConversationScreen} />
+          <Stack.Screen
+            name="DMConversation"
+            component={DMConversationScreen}
+          />
           <Stack.Screen
             name="SellItem"
             component={SellItemScreen}
             options={{ presentation: "modal" }}
           />
-          <Stack.Screen name="ListingDetails" component={ListingDetailsScreen} />
+          <Stack.Screen
+            name="ListingDetails"
+            component={ListingDetailsScreen}
+          />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
-          <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePasswordScreen}
+          />
           <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
           <Stack.Screen name="Language" component={LanguageScreen} />
           <Stack.Screen name="Subscriptions" component={SubscriptionsScreen} />
@@ -67,4 +77,3 @@ export default function App() {
     </MarketplaceProvider>
   );
 }
-
