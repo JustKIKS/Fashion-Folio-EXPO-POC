@@ -9,6 +9,7 @@ import {
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import {
   Sparkles,
@@ -83,13 +84,21 @@ export default function HomePage() {
 
   const loadData = async () => {
     try {
-      // 1. Appel au backend pour récupérer l'utilisateur connecté
-      // 🚨 Remplace "/users/me" par la vraie route de ton backend si elle est différente (ex: /auth/me)
-      const userResponse = await fetch("http://10.1.219.54:8000/users/me", {
+      // 1. On récupère le vrai token sauvegardé lors du Login
+      // ⚠️ Assure-toi que "userToken" est bien le nom que tu utilises lors de la sauvegarde au login
+      const token = await AsyncStorage.getItem("userToken");
+
+      if (!token) {
+        console.log("Aucun token trouvé, l'utilisateur n'est pas connecté.");
+        setLoading(false);
+        return;
+      }
+
+      // 2. Appel pour récupérer l'utilisateur avec le VRAI token
+      const userResponse = await fetch("http://10.1.219.54:8000/auth/me", {
         method: "GET",
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTczOTkzfQ.i6pdBckA-IkqcSPnPiv5wKafjGalJxk1MKDzkjV8fNU",
+          Authorization: `Bearer ${token}`, // 👈 INJECTION DYNAMIQUE DU TOKEN
           "Content-Type": "application/json",
         },
       });
@@ -97,16 +106,17 @@ export default function HomePage() {
       if (userResponse.ok) {
         const currentUser = await userResponse.json();
         setUser(currentUser);
+      } else {
+        console.error("Erreur auth:", userResponse.status);
       }
 
-      // 2. Appel au backend pour récupérer son dressing (pour mettre à jour le compteur d'articles)
+      // 3. Appel pour récupérer le dressing avec le VRAI token
       const wardrobeResponse = await fetch(
         "http://10.1.219.54:8000/wardrobe/",
         {
           method: "GET",
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzc1NTczOTkzfQ.i6pdBckA-IkqcSPnPiv5wKafjGalJxk1MKDzkjV8fNU",
+            Authorization: `Bearer ${token}`, // 👈 INJECTION DYNAMIQUE ICI AUSSI
             "Content-Type": "application/json",
           },
         },
@@ -170,7 +180,6 @@ export default function HomePage() {
             </View>
           </View>
           <View style={styles.headerRight}>
-            
             <TouchableOpacity
               style={styles.iconBtn}
               onPress={() => navigation.navigate("Social")}
