@@ -10,6 +10,7 @@ import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
 import SettingsScreen from './src/screens/Profile/SettingsScreen';
 import LanguageScreen from './src/screens/Profile/LanguageScreen';
 import ChangePasswordScreen from './src/screens/Profile/ChangePasswordScreen';
+import BlockedUsersScreen from './src/screens/Profile/BlockedUsersScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ export default function App() {
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="Language" component={LanguageScreen} />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+        <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
