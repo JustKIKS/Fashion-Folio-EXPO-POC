@@ -127,7 +127,7 @@ export default function ItemDetailsScreen() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
@@ -186,11 +186,14 @@ export default function ItemDetailsScreen() {
 
           {/* Formulaire */}
           <View style={styles.form}>
-            <Text style={styles.label}>Nom de l'article</Text>
+            {/* 🚨 CORRECTION ICI : Le champ texte gère maintenant le Style (casual, chic, etc.) */}
+            <Text style={styles.label}>
+              Style du vêtement (ex: casual, chic...)
+            </Text>
             <TextInput
               style={styles.input}
-              value={item.type}
-              onChangeText={(val) => setItem({ ...item, type: val })}
+              value={item.style}
+              onChangeText={(val) => setItem({ ...item, style: val })}
             />
 
             <Text style={styles.label}>Marque</Text>
@@ -200,18 +203,19 @@ export default function ItemDetailsScreen() {
               onChangeText={(val) => setItem({ ...item, brand: val })}
             />
 
+            {/* 🚨 CORRECTION ICI : Les Catégories gèrent maintenant le "type" */}
             <Text style={styles.label}>Catégorie</Text>
             <View style={styles.chipGroup}>
               {categories.map((cat) => (
                 <TouchableOpacity
                   key={cat}
-                  onPress={() => setItem({ ...item, style: cat })}
-                  style={[styles.chip, item.style === cat && styles.chipActive]}
+                  onPress={() => setItem({ ...item, type: cat })}
+                  style={[styles.chip, item.type === cat && styles.chipActive]}
                 >
                   <Text
                     style={[
                       styles.chipText,
-                      item.style === cat && styles.chipTextActive,
+                      item.type === cat && styles.chipTextActive,
                     ]}
                   >
                     {cat}

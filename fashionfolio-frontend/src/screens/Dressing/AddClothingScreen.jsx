@@ -49,9 +49,10 @@ export default function AddClothingScreen() {
   const [imageUri, setImageUri] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // 🚨 CORRECTION 1 : On remplace "category" par "type" et "type" par "style"
   const [formData, setFormData] = useState({
-    type: "",
-    category: "",
+    style: "", // Le champ de texte libre (casual, chic, etc.)
+    type: "", // La catégorie cliquée (haut, bas, etc.)
     brand: "",
     color: "",
     season: "",
@@ -60,7 +61,7 @@ export default function AddClothingScreen() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
@@ -80,14 +81,14 @@ export default function AddClothingScreen() {
   };
 
   const handleSubmit = async () => {
-    if (!formData.category) {
+    // 🚨 CORRECTION 2 : On vérifie bien le "type"
+    if (!formData.type) {
       Alert.alert("Erreur", "Tu dois choisir une catégorie (Haut, Bas...)");
       return;
     }
 
     setLoading(true);
     try {
-      // 🚨 On récupère le vrai token stocké lors de la connexion
       const token = await AsyncStorage.getItem("userToken");
 
       if (!token) {
@@ -96,16 +97,17 @@ export default function AddClothingScreen() {
         return;
       }
 
+      // 🚨 CORRECTION 3 : L'envoi des données est dans le bon sens !
       const response = await fetch(`${API_URL}/wardrobe/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🚨 On injecte le vrai token
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          type: formData.type,
+          type: formData.type.toLowerCase(), // Bouton cliqué (haut, bas)
+          style: formData.style || "casual", // Texte tapé
           brand: formData.brand || "Sans marque",
-          style: formData.category.toLowerCase(),
           color: formData.color || "N/A",
           pattern: "uni",
           season: formData.season || "toute",
@@ -159,12 +161,15 @@ export default function AddClothingScreen() {
         </TouchableOpacity>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Nom de l'article (ex: T-shirt) *</Text>
+          {/* 🚨 CORRECTION 4 : Le champ texte pilote formData.style */}
+          <Text style={styles.label}>
+            Style de l'article (ex: casual, streetwear...)
+          </Text>
           <TextInput
             style={styles.input}
-            value={formData.type}
-            onChangeText={(val) => setFormData({ ...formData, type: val })}
-            placeholder="Ex: Jean Slim"
+            value={formData.style}
+            onChangeText={(val) => setFormData({ ...formData, style: val })}
+            placeholder="Ex: Casual"
           />
 
           <Text style={styles.label}>Marque</Text>
@@ -175,21 +180,22 @@ export default function AddClothingScreen() {
             placeholder="Ex: Zara, Levi's..."
           />
 
+          {/* 🚨 CORRECTION 5 : Les chips pilotent formData.type */}
           <Text style={styles.label}>Catégorie *</Text>
           <View style={styles.chipGroup}>
             {categories.map((cat) => (
               <TouchableOpacity
                 key={cat}
-                onPress={() => toggleValue("category", cat)}
+                onPress={() => toggleValue("type", cat)}
                 style={[
                   styles.chip,
-                  formData.category === cat && styles.chipActive,
+                  formData.type === cat && styles.chipActive,
                 ]}
               >
                 <Text
                   style={[
                     styles.chipText,
-                    formData.category === cat && styles.chipTextActive,
+                    formData.type === cat && styles.chipTextActive,
                   ]}
                 >
                   {cat}

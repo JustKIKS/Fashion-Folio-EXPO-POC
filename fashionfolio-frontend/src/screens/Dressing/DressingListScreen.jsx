@@ -24,7 +24,10 @@ const categories = [
   { id: "haut", label: "Hauts" },
   { id: "bas", label: "Bas" },
   { id: "robe", label: "Robes" },
+  { id: "veste", label: "Vestes" }, // 👈 Ajouté
+  { id: "manteau", label: "Manteaux" }, // 👈 Ajouté
   { id: "chaussures", label: "Chaussures" },
+  { id: "sac", label: "Sacs" }, // 👈 Ajouté
   { id: "accessoire", label: "Accessoires" },
 ];
 
@@ -138,8 +141,8 @@ export default function DressingScreen() {
 
     if (selectedCategory !== "all") {
       filtered = filtered.filter((item) => {
-        const cat = (item.style || "").toLowerCase().trim();
-        return cat === selectedCategory.toLowerCase();
+        const itemCategory = (item.type || "").toLowerCase().trim();
+        return itemCategory === selectedCategory.toLowerCase();
       });
     }
 

@@ -86,7 +86,7 @@ Analyse ce vêtement et retourne UNIQUEMENT un JSON valide sans texte autour.
 
 FORMAT OBLIGATOIRE :
 {
-  "type": "top | bottom | shoes | accessory",
+  "type": "haut | bas | robe | chaussures | accessoire | sac",
   "color": "couleur principale en français",
   "style": "casual | formel | sportswear | soirée",
   "pattern": "uni | rayé | floral | carreaux | autre",
