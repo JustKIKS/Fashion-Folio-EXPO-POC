@@ -74,6 +74,46 @@ export default function EditProfileScreen() {
                         multiline
                         numberOfLines={4}
                     />
+
+            {/* Liens sociaux */}
+            <View style={styles.socialSection}>
+                <View style={styles.socialHeader}>
+                    <Text style={styles.sectionTitle}>Liens sociaux</Text>
+                </View>
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Instagram</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={instagram}
+                        onChangeText={setInstagram}
+                        placeholder="@username"
+                        placeholderTextColor="#909090"
+                    />      
+                </View>
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>TikTok</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={tiktok}
+                        onChangeText={setTiktok}
+                        placeholder="@username"
+                        placeholderTextColor="#909090"
+                    />
+                </View>
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Site web</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={website}
+                        onChangeText={setWebsite}
+                        placeholder="https://..."
+                        placeholderTextColor="#909090"
+                    />
+                </View>
+                </View>
                 </View>
             </View>
         </ScrollView>
