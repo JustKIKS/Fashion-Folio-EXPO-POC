@@ -46,6 +46,13 @@ export default function LoginScreen({ navigation }) {
       // 🚨 CORRECTION 2 : On utilise bien "userToken" pour que la Home Page le trouve !
       await AsyncStorage.setItem("userToken", data.access_token);
 
+      // Récupérer les infos de l'utilisateur
+      const userResponse = await fetch(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${data.access_token}` }
+      });
+      const userData = await userResponse.json();
+      await AsyncStorage.setItem("userData", JSON.stringify(userData));
+
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
     } catch {
       setError("Une erreur est survenue. Vérifiez votre connexion.");
