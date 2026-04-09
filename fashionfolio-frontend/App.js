@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MarketplaceProvider } from "./src/context/MarketplaceContext";
 import TabNavigator from "./src/navigation/TabNavigator";
 import AddClothingScreen from "./src/screens/Dressing/AddClothingScreen";
+import ItemDetailsScreen from "./src/screens/Dressing/ItemDetailsScreen";
 import DMListScreen from "./src/screens/Social/DMListScreen";
 import DMConversationScreen from "./src/screens/Social/DMConversationScreen";
 import LoginScreen from "./src/screens/Auth/LoginScreen";
@@ -18,7 +19,6 @@ import BlockedUsersScreen from "./src/screens/Profile/BlockedUsersScreen";
 import LanguageScreen from "./src/screens/Profile/LanguageScreen";
 import SubscriptionsScreen from "./src/screens/Profile/SubscriptionsScreen";
 import AIChatScreen from "./src/screens/Chat/ChatScreen";
-
 import StatsScreen from "./src/screens/Profile/StatsScreen";
 
 const Stack = createNativeStackNavigator();
@@ -27,7 +27,7 @@ export default function App() {
   const [initialRoute, setInitialRoute] = useState(null);
 
   useEffect(() => {
-    AsyncStorage.getItem("token").then((token) => {
+    AsyncStorage.getItem("userToken").then((token) => {
       setInitialRoute(token ? "MainTabs" : "Login");
     });
   }, []);
@@ -45,6 +45,9 @@ export default function App() {
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="MainTabs" component={TabNavigator} />
           <Stack.Screen name="IA Chat" component={AIChatScreen} />
+
+          <Stack.Screen name="ItemDetails" component={ItemDetailsScreen} />
+
           <Stack.Screen
             name="AddClothing"
             component={AddClothingScreen}
