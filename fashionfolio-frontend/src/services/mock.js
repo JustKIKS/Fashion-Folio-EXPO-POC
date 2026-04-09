@@ -40,13 +40,17 @@ export const markAsRead = (conversationId) => {
 };
 
 export const MOCK_USER = {
-    name: "Testing",
-    username: "@test_mode",
-    bio: "Passionnée de mode 👗 | Streetwear & Élégance",
+    name: "LUser",
+    username: "@user_mode",
+    bio: "Passionné de mode 👗 | Streetwear & Élégance",
     avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=764",
+    isPremium: false,
     stats: {
-    pieces: 24,
-    outfits: 8,
-    friends: 12
+        pieces: 24,
+        outfits: 8,
+        worn: 15,
+        likes: 102,
+        followers: 48,
+        following: 32
     }
 };
