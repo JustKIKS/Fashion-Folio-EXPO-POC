@@ -113,10 +113,6 @@ export default function SettingsScreen() {
 
         {/* Zone dangereuse */}
         <View style={styles.dangerSection}>
-            <View style={styles.sectionHeader}>
-                <Trash2 color="#FF3B30" size={18} />
-                <Text style={[styles.sectionTitle, { color: '#FF3B30' }]}>Zone dangereuse</Text>
-            </View>
             <View style={styles.sectionContent}>
                 <TouchableOpacity
                     style={styles.deleteButton}
