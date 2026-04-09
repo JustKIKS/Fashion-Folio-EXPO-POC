@@ -18,7 +18,7 @@ export default function ProfileScreen() {
       <View style={[styles.banner, { backgroundColor: isPremium ? '#FFD700' : '#4A26D0' }]}>
         <View style={styles.bannerHeader}>
           <Text style={styles.bannerTitle}>Mon profil</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
             <Settings color="#fff" size={24} />
           </TouchableOpacity>
         </View>
@@ -51,8 +51,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* Bouton modifier */}
-        <TouchableOpacity style={styles.editButton}>
-          <Edit2 color="#fff" size={16} />
+          <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>          <Edit2 color="#fff" size={16} />
           <Text style={styles.editButtonText}>Modifier mon profil</Text>
         </TouchableOpacity>
 

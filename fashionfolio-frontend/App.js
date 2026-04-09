@@ -6,6 +6,7 @@ import TabNavigator from "./src/navigation/TabNavigator";
 import AddClothingScreen from "./src/screens/Dressing/AddClothingScreen";
 import DMListScreen from "./src/screens/Social/DMListScreen";
 import DMConversationScreen from "./src/screens/Social/DMConversationScreen";
+import EditProfileScreen from './src/screens/Profile/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
