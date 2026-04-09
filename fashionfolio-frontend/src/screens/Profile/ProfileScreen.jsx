@@ -78,7 +78,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* Quick Actions */}
-        <View style={styles.actionsGrid}>
+        <View style={styles.actionsGrid} onPress={() => navigation.navigate('Stats')} >
           <TouchableOpacity style={styles.actionButton}>
             <TrendingUp color="#4A26D0" size={20} />
             <Text style={styles.actionLabel}>Stats</Text>
