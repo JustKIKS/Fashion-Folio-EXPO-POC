@@ -5,6 +5,12 @@
     "version": "1.0.0",
     "sdkVersion": "54.0.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "light"
+    "userInterfaceStyle": "light",
+    "icon": "./assets/icon_blanc.png",
+    "splash": {
+      "image": "./assets/icon_blanc.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    }
   }
 }
