@@ -2,6 +2,7 @@ from google import genai
 import json
 from app.config import settings
 import base64
+from google.genai.errors import APIError
 
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
@@ -61,19 +62,37 @@ def get_outfit_suggestion(wardrobe: list, outfit_history: list, user_message: st
     prompt = build_system_prompt(wardrobe, outfit_history)
     full_prompt = prompt + f"\n\nDEMANDE UTILISATEUR : {user_message}"
 
-    response = client.models.generate_content(
-        model=settings.GEMINI_MODEL,
-        contents=full_prompt
-    )
+    try:
+        response = client.models.generate_content(
+            model=settings.GEMINI_MODEL,
+            contents=full_prompt
+        )
 
-    print("=== RÉPONSE GEMINI ===")
-    print(response.text)
-    print("=====================")
+        print("=== RÉPONSE GEMINI ===")
+        print(response.text)
+        print("=====================")
 
-    raw = response.text.strip()
-    raw = raw.replace("```json", "").replace("```", "").strip()
+        raw = response.text.strip()
+        raw = raw.replace("```json", "").replace("```", "").strip()
 
-    return json.loads(raw)
+        return json.loads(raw)
+
+    # 🚨 FIX : On attrape spécifiquement les erreurs de l'API Google
+    except APIError as e:
+        print(f"Erreur API Gemini: {e}")
+        # On renvoie un JSON "de secours" formaté correctement
+        return {
+            "message": "Styliste indisponible pour le moment (serveurs surchargés). Veuillez réessayer dans quelques minutes ! ⏳",
+            "outfit": None,
+            "out_of_scope": False
+        }
+    except Exception as e:
+        print(f"Erreur inattendue Gemini: {e}")
+        return {
+            "message": "Oups, j'ai eu un petit bug en analysant ton dressing. Peux-tu reformuler ?",
+            "outfit": None,
+            "out_of_scope": False
+        }
 
 
 def analyze_clothing_photo(image_bytes: bytes) -> dict:
