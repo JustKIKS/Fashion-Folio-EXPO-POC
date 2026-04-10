@@ -9,15 +9,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
+  ScrollView,
 } from "react-native";
-// 🚨 AJOUT DES IMPORTS
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeft, RotateCcw } from "lucide-react-native";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function ChatScreen() {
-  const navigation = useNavigation(); // 👈 Initialisation de la navigation
+  const navigation = useNavigation();
   const [maQuestion, setMaQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -47,19 +47,23 @@ export default function ChatScreen() {
     setIsTyping(true);
 
     try {
-      // 🚨 UTILISATION DE L'API_URL DU .ENV
       const res = await fetch(`${API_URL}/chat/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // ⚠️ N'oublie pas de gérer le user_id dynamiquement avec ton token plus tard !
         body: JSON.stringify({ message: messageATraiter, user_id: 1 }),
       });
 
       const data = await res.json();
+
+      // 🚨 ON RÉCUPÈRE L'OUTFIT ICI
       const aiMsg = {
         id: Date.now() + 1,
         role: "assistant",
-        content: data.message || "Je suis prêt pour ton prochain look !",
+        content: data.message || "Voici ce que j'ai trouvé :",
+        outfit: data.outfit || null, // 👈 On stocke les vêtements
       };
+
       setMessages((prev) => [...prev, aiMsg]);
     } catch (error) {
       setMessages((prev) => [
@@ -75,28 +79,69 @@ export default function ChatScreen() {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={item.role === "user" ? styles.userWrapper : styles.aiWrapper}>
-      {item.role === "assistant" && (
-        <View style={styles.megaAvatarContainer}>
-          <Image
-            source={require("../../../assets/images/fashionfoliobot.png")}
-            style={styles.megaAvatarImage}
-          />
-        </View>
-      )}
+  const renderItem = ({ item }) => {
+    // 🚨 On extrait les vêtements de l'objet outfit en ignorant les "null"
+    const outfitItems = item.outfit
+      ? Object.values(item.outfit).filter(Boolean)
+      : [];
+
+    return (
       <View
-        style={[
-          styles.bubble,
-          item.role === "user" ? styles.userBubble : styles.aiBubble,
-        ]}
+        style={item.role === "user" ? styles.userWrapper : styles.aiWrapper}
       >
-        <Text style={item.role === "user" ? styles.userText : styles.aiText}>
-          {item.content}
-        </Text>
+        {item.role === "assistant" && (
+          <View style={styles.megaAvatarContainer}>
+            <Image
+              source={require("../../../assets/images/fashionfoliobot.png")}
+              style={styles.megaAvatarImage}
+            />
+          </View>
+        )}
+
+        <View style={styles.messageContent}>
+          <View
+            style={[
+              styles.bubble,
+              item.role === "user" ? styles.userBubble : styles.aiBubble,
+            ]}
+          >
+            <Text
+              style={item.role === "user" ? styles.userText : styles.aiText}
+            >
+              {item.content}
+            </Text>
+          </View>
+
+          {/* 🚨 AFFICHAGE DES IMAGES S'IL Y A UNE TENUE */}
+          {outfitItems.length > 0 && (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.outfitCarousel}
+            >
+              {outfitItems.map((vêtement, index) => (
+                <View key={index} style={styles.outfitCard}>
+                  {vêtement.photo_url ? (
+                    <Image
+                      source={{ uri: vêtement.photo_url }}
+                      style={styles.outfitImage}
+                    />
+                  ) : (
+                    <View style={styles.outfitPlaceholder}>
+                      <Text>👗</Text>
+                    </View>
+                  )}
+                  <Text style={styles.outfitName} numberOfLines={1}>
+                    {vêtement.name}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -105,7 +150,6 @@ export default function ChatScreen() {
     >
       {estAuDebut ? (
         <View style={styles.landingContainer}>
-          {/* 🚨 BOUTON RETOUR SUR LE LANDING */}
           <TouchableOpacity
             style={styles.floatingBackButton}
             onPress={() => navigation.goBack()}
@@ -160,7 +204,6 @@ export default function ChatScreen() {
       ) : (
         <View style={{ flex: 1 }}>
           <View style={styles.header}>
-            {/* 🚨 HEADER AMÉLIORÉ AVEC RETOUR ET RESET */}
             <View style={styles.headerButtonsRow}>
               <TouchableOpacity
                 style={styles.backButton}
@@ -238,19 +281,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
   },
-  centerContent: {
-    width: "100%",
-    marginTop: 80,
-  },
-  greetingWrapper: {
-    marginBottom: 20,
-    paddingLeft: 5,
-  },
-  welcomeText: {
-    fontSize: 26,
-    color: "#B0B0B0",
-    fontWeight: "400",
-  },
+  centerContent: { width: "100%", marginTop: 80 },
+  greetingWrapper: { marginBottom: 20, paddingLeft: 5 },
+  welcomeText: { fontSize: 26, color: "#B0B0B0", fontWeight: "400" },
   questionText: {
     fontSize: 38,
     color: "#1C0256",
@@ -285,11 +318,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     opacity: 0.6,
   },
-  heroSubtitle: {
-    fontSize: 12,
-    color: "#AAA",
-    fontWeight: "500",
-  },
+  heroSubtitle: { fontSize: 12, color: "#AAA", fontWeight: "500" },
   suggestionsWrapper: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -313,13 +342,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     marginBottom: 30,
-    maxWidth: "85%",
+    maxWidth: "90%",
   },
   userWrapper: { alignItems: "flex-end", marginBottom: 25 },
+  messageContent: { flex: 1 }, // 👈 Ajouté pour regrouper Bulle + Images
   megaAvatarContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: "#F2F2F7",
     marginRight: 12,
     justifyContent: "center",
@@ -334,16 +364,50 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     transform: [{ translateX: -4 }],
   },
-  bubble: { padding: 18, borderRadius: 24 },
-  aiBubble: { backgroundColor: "#F2F2F7", borderBottomLeftRadius: 4 },
-  userBubble: { backgroundColor: "#4A26D0", borderBottomRightRadius: 4 },
-  aiText: { color: "#1C0256", fontSize: 16, lineHeight: 24 },
-  userText: { color: "#FFFFFF", fontSize: 16, fontWeight: "500" },
+  bubble: { padding: 16, borderRadius: 24 },
+  aiBubble: {
+    backgroundColor: "#F2F2F7",
+    borderBottomLeftRadius: 4,
+    alignSelf: "flex-start",
+  },
+  userBubble: {
+    backgroundColor: "#4A26D0",
+    borderBottomRightRadius: 4,
+    alignSelf: "flex-end",
+  },
+  aiText: { color: "#1C0256", fontSize: 15, lineHeight: 22 },
+  userText: { color: "#FFFFFF", fontSize: 15, fontWeight: "500" },
   typingIndicator: {
     paddingLeft: 70,
     color: "#4A26D0",
     fontSize: 12,
     marginBottom: 8,
+    fontWeight: "600",
+  },
+
+  // --- OUTFIT CAROUSEL ---
+  outfitCarousel: { marginTop: 10, alignSelf: "flex-start" },
+  outfitCard: { width: 80, marginRight: 10, alignItems: "center" },
+  outfitImage: {
+    width: 80,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: "#E5E5EA",
+    resizeMode: "cover",
+  },
+  outfitPlaceholder: {
+    width: 80,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: "#E5E5EA",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  outfitName: {
+    fontSize: 11,
+    color: "#1C0256",
+    marginTop: 5,
+    textAlign: "center",
     fontWeight: "600",
   },
 

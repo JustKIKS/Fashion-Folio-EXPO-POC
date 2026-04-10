@@ -9,7 +9,6 @@ client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 
 def build_system_prompt(wardrobe: list, outfit_history: list) -> str:
-
     # Formate l'historique pour le LLM
     history_text = ""
     if outfit_history:
@@ -20,7 +19,8 @@ def build_system_prompt(wardrobe: list, outfit_history: list) -> str:
     else:
         history_text = "Aucune tenue suggérée pour l'instant."
 
-    return f"""
+    # 1ère partie : Le prompt avec les variables (f-string)
+    intro = f"""
 Tu es Stylist, l'assistant styliste de FashionFolio.
 Tu composes des tenues UNIQUEMENT avec les vêtements du dressing ci-dessous.
 Tu réponds UNIQUEMENT en JSON valide, sans texte autour, sans markdown.
@@ -33,29 +33,28 @@ HISTORIQUE COMPLET DE CETTE CONVERSATION :
 {history_text}
 
 RÈGLES STRICTES :
-- Tu te souviens de toutes les tenues que tu as déjà proposées dans cet historique
-- Ne répète jamais une combinaison de vêtements déjà suggérée
-- Utilise uniquement les vêtements du dressing ci-dessus
-- Les questions sur l'historique ou les tenues passées sont dans ton périmètre — réponds-y
-- Si et SEULEMENT SI la question n'a aucun rapport avec la mode ou les vêtements, mets out_of_scope: true
-- Présente toujours dans l'ordre : top → bottom → shoes → accessory
+- Sois très bref et direct dans ton "message" (1 ou 2 phrases max, style fun et mode).
+- Tu te souviens de toutes les tenues que tu as déjà proposées dans cet historique.
+- Utilise uniquement les vêtements du dressing ci-dessus.
+- Présente toujours dans l'ordre : top → bottom → shoes → accessory.
 
 FORMAT DE RÉPONSE OBLIGATOIRE :
-{{
-  "message": "texte naturel pour l'utilisateur",
-  "outfit": {{
-    "top":       {{"id": 1, "name": "..."}},
-    "bottom":    {{"id": 2, "name": "..."}},
-    "shoes":     {{"id": 3, "name": "..."}},
-    "accessory": null
-  }},
-  "out_of_scope": false
-}}
-
-Si l'utilisateur pose une question sur les tenues passées (ex: "tu te souviens ?"), 
-réponds avec out_of_scope: false et résume les tenues de l'historique dans "message", 
-avec "outfit": null.
 """
+
+    # 2ème partie : Le JSON en chaîne normale (sans le 'f' devant, donc Python ne cherche pas de variables)
+    json_format = """{
+  "message": "Phrase courte et stylée pour présenter la tenue",
+  "outfit": {
+    "top":       {"id": 1, "name": "T-shirt blanc", "photo_url": "http://..."},
+    "bottom":    {"id": 2, "name": "Jean bleu", "photo_url": "http://..."},
+    "shoes":     {"id": 3, "name": "Baskets", "photo_url": "http://..."},
+    "accessory": null
+  },
+  "out_of_scope": false
+}"""
+
+    # On colle les deux ensemble !
+    return intro + json_format
 
 
 def get_outfit_suggestion(wardrobe: list, outfit_history: list, user_message: str) -> dict:
