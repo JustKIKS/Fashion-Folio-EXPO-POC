@@ -310,14 +310,14 @@ Fashionfolio est né de la refonte complète d'un template web React open-source
 
 ## 👥 Équipe
 
-Développé avec ❤️ par l'équipe Fashionfolio.
+Développé par l'équipe Fashionfolio.
 
-| Membre       | Rôle                              |
-| ------------ | --------------------------------- |
-| _Prénom NOM_ | Lead Frontend React Native        |
-| _Prénom NOM_ | Backend FastAPI & Base de données |
-| _Prénom NOM_ | UI/UX Design & Navigation         |
-| _Prénom NOM_ | Intégration & Tests               |
+| Membre          | 
+| ------------    | 
+| Maxime Goëffier | 
+| Lélia Pérez     | 
+| Luka Brouard    | 
+| Mohamed Tlili   | 
 
 ---
 
@@ -325,6 +325,6 @@ Développé avec ❤️ par l'équipe Fashionfolio.
 
 **© 2025 Fashionfolio — Tous droits réservés**
 
-_Made with ☕ and a passion for fashion_
+
 
 </div>
