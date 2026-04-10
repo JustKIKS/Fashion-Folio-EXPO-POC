@@ -11,7 +11,7 @@ import { MOCK_USER } from "../../services/mock";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://10.1.170.254:8000";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
