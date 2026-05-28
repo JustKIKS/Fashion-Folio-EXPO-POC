@@ -4,7 +4,7 @@
 
 ### _Votre dressing connecté. Votre marketplace. Votre communauté._
 
-**Une application mobile hybride qui réinvente la façon dont les passionnés de mode gèrent, partagent et vendent leurs vêtements.**
+**Développée dans le cadre d'un ETNA Camp, cette application mobile hybride est un Proof of Concept (POC) visant à prototyper une solution technique pour une entreprise partenaire. Le projet démontre la faisabilité d'une plateforme qui réinvente la façon dont les passionnés de mode gèrent, partagent et vendent leurs vêtements.**
 
 <br/>
 
