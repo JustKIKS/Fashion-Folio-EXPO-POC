@@ -49,35 +49,33 @@ Elle est née de la refonte complète d'un template web React (base44), entière
 
 ## 📸 Aperçu de l'application
 
-> 💡 _Remplacez les emplacements ci-dessous par les captures d'écran de votre application._
-
 ### Authentification & Accueil
 
-|                               Login                                |                                 Register                                 |                               Home                               |
-| :----------------------------------------------------------------: | :----------------------------------------------------------------------: | :--------------------------------------------------------------: |
-| <img src="./screenshots/login.png" width="200" alt="Écran Login"/> | <img src="./screenshots/register.png" width="200" alt="Écran Register"/> | <img src="./screenshots/home.png" width="200" alt="Écran Home"/> |
-|                   _Connexion sécurisée par JWT_                    |                           _Création de compte_                           |                  _Tableau de bord utilisateur_                   |
+|                                           Login                                            |                                             Register                                             |                                             Home                                             |
+| :----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
+| <img src="./fashionfolio-frontend/assets/images/login.png" width="200" alt="Écran Login"/> | <img src="./fashionfolio-frontend/assets/images/register.png" width="200" alt="Écran Register"/> | <img src="./fashionfolio-frontend/assets/images/homepage.png" width="200" alt="Écran Home"/> |
+|                               _Connexion sécurisée par JWT_                                |                                       _Création de compte_                                       |                                _Tableau de bord utilisateur_                                 |
 
 ### Mon Dressing
 
-|                               Grille du Dressing                               |                           Filtres par catégorie                           |                             Ajout d'un vêtement                              |
-| :----------------------------------------------------------------------------: | :-----------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
-| <img src="./screenshots/dressing_grid.png" width="200" alt="Grille Dressing"/> | <img src="./screenshots/dressing_filters.png" width="200" alt="Filtres"/> | <img src="./screenshots/add_clothing.png" width="200" alt="Ajout vêtement"/> |
-|                           _Vue en grille des pièces_                           |                         _Filtrage par catégorie_                          |                        _Formulaire avec upload photo_                        |
+|                                          Dressing                                          |                                         Chat Styliste                                          |                                                Chatbot                                                 |
+| :----------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
+| <img src="./fashionfolio-frontend/assets/images/dressing.png" width="200" alt="Dressing"/> | <img src="./fashionfolio-frontend/assets/images/chatbot.png" width="200" alt="Chat Styliste"/> | <img src="./fashionfolio-frontend/assets/images/chatbotanswer.png" width="200" alt="Réponse Chatbot"/> |
+|                                 _Vue en grille des pièces_                                 |                                     _Interface du chat IA_                                     |                                        _Réponse du styliste IA_                                        |
 
-### Marketplace
+### Marketplace & Social
 
-|                          Parcourir les articles                          |                               Détail d'un article                               |                             Mettre en vente                              |
-| :----------------------------------------------------------------------: | :-----------------------------------------------------------------------------: | :----------------------------------------------------------------------: |
-| <img src="./screenshots/marketplace.png" width="200" alt="Marketplace"/> | <img src="./screenshots/listing_details.png" width="200" alt="Détail annonce"/> | <img src="./screenshots/sell_item.png" width="200" alt="Mise en vente"/> |
-|                      _Grille + moteur de recherche_                      |                          _Vue détaillée de l'annonce_                           |                        _Vente depuis le Dressing_                        |
+|                                           Marketplace                                            |                                         Social                                          |                                         Messages                                          |
+| :----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+| <img src="./fashionfolio-frontend/assets/images/marketplace.png" width="200" alt="Marketplace"/> | <img src="./fashionfolio-frontend/assets/images/SP.png" width="200" alt="Social Feed"/> | <img src="./fashionfolio-frontend/assets/images/message.png" width="200" alt="Messages"/> |
+|                                  _Grille + moteur de recherche_                                  |                                   _Fil communautaire_                                   |                                  _Conversations privées_                                  |
 
-### Social & Profil
+### Profil & Paramètres
 
-|                               Feed Social                                |                                    Messagerie                                    |                             Profil                              |
-| :----------------------------------------------------------------------: | :------------------------------------------------------------------------------: | :-------------------------------------------------------------: |
-| <img src="./screenshots/social_feed.png" width="200" alt="Feed Social"/> | <img src="./screenshots/dm_conversation.png" width="200" alt="Messages privés"/> | <img src="./screenshots/profile.png" width="200" alt="Profil"/> |
-|                           _Fil communautaire_                            |                             _Conversations privées_                              |                _Gestion du profil & abonnement_                 |
+|                                         Profil                                          |                                          Paramètres                                          |
+| :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
+| <img src="./fashionfolio-frontend/assets/images/profile.png" width="200" alt="Profil"/> | <img src="./fashionfolio-frontend/assets/images/settings.png" width="200" alt="Paramètres"/> |
+|                            _Gestion du profil & abonnement_                             |                                 _Réglages de l'application_                                  |
 
 ---
 
@@ -192,20 +190,15 @@ Avant de commencer, assurez-vous d'avoir installé :
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/votre-org/fashionfolio.git
-cd fashionfolio
+git clone https://rendu-git.etna-alternance.net/module-10143/activity-55374/group-1075096
+cd FashionFrontEnd
 ```
 
 ### 2. Lancer le Frontend (React Native / Expo)
 
 ```bash
-# Se placer dans le dossier frontend
-cd frontend
-
-# Installer les dépendances
+cd fashionfolio-frontend
 npm install
-
-# Démarrer le serveur de développement Expo
 npx expo start
 ```
 
@@ -222,18 +215,11 @@ Scannez ensuite le QR code affiché dans le terminal avec l'application **Expo G
 ### 3. Lancer le Backend (FastAPI)
 
 ```bash
-# Se placer dans le dossier backend
-cd backend
-
-# Créer un environnement virtuel Python
+cd fashionfolio-backend
 python -m venv venv
 source venv/bin/activate  # Sur Windows : venv\Scripts\activate
-
-# Installer les dépendances Python
 pip install -r requirements.txt
-
-# Lancer le serveur FastAPI
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 L'API sera accessible sur `http://localhost:8000`.  
@@ -241,47 +227,81 @@ La documentation interactive Swagger est disponible sur `http://localhost:8000/d
 
 ### 4. Configuration de l'environnement
 
-Créez un fichier `.env` à la racine du dossier `frontend` :
+Créez un fichier `.env` à la racine du dossier `fashionfolio-frontend` en copiant `.env.example` :
+
+```bash
+cp .env.example .env
+```
+
+Puis renseignez votre IP locale :
 
 ```env
-API_BASE_URL=http://YOUR_LOCAL_IP:8000
-# Remplacez YOUR_LOCAL_IP par votre adresse IP locale (ex: 192.168.1.42)
-# Ne pas utiliser localhost sur un appareil physique
+EXPO_PUBLIC_API_URL=http://YOUR_LOCAL_IP:8000
+EXPO_PUBLIC_USE_MOCK=true
 ```
+
+> Pour trouver votre IP locale :
+>
+> ```bash
+> ipconfig getifaddr en0   # Mac
+> hostname -I              # Linux
+> ```
+>
+> Les deux appareils doivent être sur le **même réseau Wi-Fi**.
 
 ---
 
 ## 📁 Structure du projet
 
 ```
-fashionfolio/
+FashionFrontEnd/
 │
-├── frontend/                      # Application React Native / Expo
-│   ├── assets/                    # Images, fonts, icônes statiques
+├── fashionfolio-frontend/             # Application React Native / Expo
+│   ├── assets/
+│   │   ├── fonts/                     # Polices (Poppins)
+│   │   ├── icons/                     # Icônes
+│   │   └── images/                    # Visuels de l'app
+│   │       ├── chatbot.png
+│   │       ├── chatbotanswer.png
+│   │       ├── dressing.png
+│   │       ├── homepage.png
+│   │       ├── login.png
+│   │       ├── marketplace.png
+│   │       ├── message.png
+│   │       ├── profile.png
+│   │       ├── register.png
+│   │       ├── settings.png
+│   │       ├── SP.png
+│   │       ├── Full_logo.png
+│   │       └── icon_blanc.png
 │   ├── src/
-│   │   ├── components/            # Composants réutilisables (Cards, Chips, etc.)
+│   │   ├── components/                # Composants réutilisables
 │   │   ├── context/
-│   │   │   └── MarketplaceContext.js  # État global de la Marketplace (mock)
+│   │   │   └── MarketplaceContext.js  # État global Marketplace (mock)
 │   │   ├── navigation/
-│   │   │   ├── RootStack.js       # Stack Navigator racine
-│   │   │   └── MainTabs.js        # Bottom Tab Navigator
+│   │   │   ├── RootStack.js           # Stack Navigator racine
+│   │   │   └── MainTabs.js            # Bottom Tab Navigator
 │   │   ├── screens/
-│   │   │   ├── auth/              # Login, Register
-│   │   │   ├── home/              # HomeScreen
-│   │   │   ├── dressing/          # DressingScreen, AddClothingScreen
-│   │   │   ├── marketplace/       # MarketplaceScreen, ListingDetailsScreen, SellItemScreen
-│   │   │   ├── social/            # SocialFeedScreen, DMListScreen, DMConversationScreen
-│   │   │   └── profile/           # ProfileScreen
+│   │   │   ├── Auth/                  # Login, Register
+│   │   │   ├── Chat/                  # ChatScreen, OutfitResultScreen
+│   │   │   ├── Dressing/              # DressingScreen, AddClothingScreen
+│   │   │   ├── Home/                  # HomeScreen
+│   │   │   ├── Marketplace/           # MarketplaceScreen, ListingDetailsScreen
+│   │   │   ├── Profile/               # ProfileScreen
+│   │   │   └── Social/                # FeedScreen, DMListScreen, DMConversationScreen
 │   │   └── services/
-│   │       └── api.js             # Appels HTTP vers le backend FastAPI
-│   ├── app.json                   # Configuration Expo
+│   │       └── api.js                 # Appels HTTP vers le backend FastAPI
+│   ├── .env.example
+│   ├── app.json
 │   └── package.json
 │
-├── backend/                       # API Python FastAPI
-│   ├── main.py                    # Point d'entrée FastAPI
-│   ├── models.py                  # Modèles SQLite / SQLAlchemy
-│   ├── routes/                    # Endpoints (auth, dressing, marketplace, social)
-│   ├── database.py                # Configuration SQLite
+├── fashionfolio-backend/              # API Python FastAPI
+│   ├── app/
+│   │   ├── models/                    # Modèles SQLite
+│   │   ├── routers/                   # Endpoints (auth, chat, social, wardrobe)
+│   │   ├── schemas/                   # Schémas Pydantic
+│   │   ├── services/                  # Logique métier
+│   │   └── main.py                    # Point d'entrée FastAPI
 │   ├── requirements.txt
 │   └── .env
 │
@@ -302,9 +322,13 @@ fashionfolio/
 >
 > **Évolution prévue :** Remplacer ce mock par de véritables appels API `POST /listings` et `GET /listings` vers le backend FastAPI.
 
-### Origine du projet
+### Commande backend correcte
 
-Fashionfolio est né de la refonte complète d'un template web React open-source (**base44**). L'ensemble du code a été repensé et adapté pour une expérience mobile native avec React Native et Expo, incluant une nouvelle architecture de navigation, un design system custom et une intégration backend dédiée.
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+> Le `main.py` se trouve dans `app/`, d'où la notation `app.main:app`.
 
 ---
 
@@ -312,19 +336,17 @@ Fashionfolio est né de la refonte complète d'un template web React open-source
 
 Développé par l'équipe Fashionfolio.
 
-| Membre          | 
-| ------------    | 
-| Maxime Goëffier | 
-| Lélia Pérez     | 
-| Luka Brouard    | 
-| Mohamed Tlili   | 
+| Membre          |
+| --------------- |
+| Maxime Goëffier |
+| Lélia Pérez     |
+| Luka Brouard    |
+| Mohamed Tlili   |
 
 ---
 
 <div align="center">
 
 **© 2025 Fashionfolio — Tous droits réservés**
-
-
 
 </div>
